@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V3</title>
+<title>Daily Lift V3 Fixed</title>
 
 <style>
 body {
@@ -12,7 +12,6 @@ body {
   color: white;
 }
 
-/* HEADER */
 header {
   text-align: center;
   padding: 15px;
@@ -20,18 +19,16 @@ header {
   font-weight: bold;
 }
 
-/* SCREENS */
 .screen {
   display: none;
   padding: 15px;
-  padding-bottom: 70px;
+  padding-bottom: 80px;
 }
 
 .active {
   display: block;
 }
 
-/* CARD */
 .card {
   background: #1a1a24;
   padding: 12px;
@@ -39,7 +36,6 @@ header {
   margin-bottom: 12px;
 }
 
-/* ITEM */
 .item {
   background: #222;
   padding: 10px;
@@ -49,8 +45,8 @@ header {
 }
 
 .done {
-  opacity: 0.5;
   text-decoration: line-through;
+  opacity: 0.5;
 }
 
 /* NAV */
@@ -74,11 +70,10 @@ header {
 
 <body>
 
-<header>🔥 Daily Lift V3</header>
+<header>🔥 Daily Lift V3 FIXED</header>
 
-<!-- HOME (MORNING + NIGHT) -->
+<!-- HOME -->
 <div id="home" class="screen active">
-
   <div class="card">
     <h2>🌅 Morning Lift</h2>
     <div class="item" onclick="toggle(this)">Cleanser - The Ordinary</div>
@@ -91,22 +86,13 @@ header {
     <div class="item" onclick="toggle(this)">Cleanser</div>
     <div class="item" onclick="toggle(this)">Moisturizer - Hydro Boost</div>
   </div>
-
 </div>
 
 <!-- PRODUCTS -->
 <div id="products" class="screen">
   <div class="card">
     <h2>🧴 Products</h2>
-    <p>Coming next: editable product images + names</p>
-  </div>
-</div>
-
-<!-- AI -->
-<div id="ai" class="screen">
-  <div class="card">
-    <h2>🧠 AI Assistant</h2>
-    <p>Coming next: “edit my routine” commands</p>
+    <p>Products tab working ✔️ (next upgrade adds images)</p>
   </div>
 </div>
 
@@ -114,22 +100,33 @@ header {
 <div id="stats" class="screen">
   <div class="card">
     <h2>📊 Stats</h2>
-    <p>Coming next: streak + consistency tracking</p>
+    <p>Stats tab working ✔️</p>
+  </div>
+</div>
+
+<!-- AI -->
+<div id="ai" class="screen">
+  <div class="card">
+    <h2>🧠 AI</h2>
+    <p>AI coming next ✔️</p>
   </div>
 </div>
 
 <!-- NAV -->
 <div class="nav">
-  <button onclick="show('home')">Home</button>
-  <button onclick="show('products')">Products</button>
-  <button onclick="show('ai')">AI</button>
-  <button onclick="show('stats')">Stats</button>
+  <button onclick="showTab('home')">Home</button>
+  <button onclick="showTab('products')">Products</button>
+  <button onclick="showTab('stats')">Stats</button>
+  <button onclick="showTab('ai')">AI</button>
 </div>
 
 <script>
-function show(id){
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+function showTab(id){
+  const screens = document.querySelectorAll(".screen");
+  screens.forEach(s => s.classList.remove("active"));
+
+  const target = document.getElementById(id);
+  if (target) target.classList.add("active");
 }
 
 function toggle(el){
