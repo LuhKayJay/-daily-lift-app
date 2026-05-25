@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V5 - Streak System</title>
+<title>Daily Lift V5.1</title>
 
 <style>
 body{
@@ -19,10 +19,7 @@ body{
   padding-bottom:80px;
 }
 
-header{
-  text-align:center;
-  font-weight:600;
-}
+header{text-align:center;font-weight:600;}
 
 .date{
   text-align:center;
@@ -31,7 +28,7 @@ header{
   margin:6px 0 10px;
 }
 
-/* TABS */
+/* TABS (RESTORED PROPERLY) */
 .tabs{
   display:flex;
   margin-bottom:10px;
@@ -50,6 +47,10 @@ header{
   opacity:1;
   border-bottom:2px solid #6c5ce7;
 }
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
 
 /* CALENDAR */
 .calendar{
@@ -114,39 +115,69 @@ header{
 
 <div class="app">
 
-<header>🔥 Daily Lift V5</header>
+<header>🔥 Daily Lift V5.1</header>
 <div class="date" id="date"></div>
+
+<!-- TABS (RESTORED) -->
+<div class="tabs">
+  <div class="tab active" onclick="openTab('home',this)">🏠 Home</div>
+  <div class="tab" onclick="openTab('products',this)">🧴 Products</div>
+  <div class="tab" onclick="openTab('stats',this)">📊 Stats</div>
+  <div class="tab" onclick="openTab('ai',this)">🧠 AI</div>
+</div>
 
 <!-- CALENDAR -->
 <div class="calendar" id="calendar"></div>
 
-<!-- MORNING -->
-<div class="section">
-  <div>🌅 Morning <span id="mPct">0%</span></div>
-  <div class="bar"><div id="mBar" class="fill"></div></div>
+<!-- HOME -->
+<div id="home" class="page active">
 
-  <div id="morningList"></div>
+  <div>
+    🌅 Morning <span id="mPct">0%</span>
+    <div class="bar"><div id="mBar" class="fill"></div></div>
+    <div id="morningList"></div>
+  </div>
+
+  <div style="margin-top:10px;">
+    🌙 Night — <span id="nightType"></span> <span id="nPct">0%</span>
+    <div class="bar"><div id="nBar" class="fill"></div></div>
+    <div id="nightList"></div>
+  </div>
+
+  <div style="margin-top:10px;">
+    📊 Today <span id="dPct">0%</span>
+    <div class="bar"><div id="dBar" class="fill"></div></div>
+  </div>
+
 </div>
 
-<!-- NIGHT -->
-<div class="section">
-  <div>🌙 Night — <span id="nightType"></span> <span id="nPct">0%</span></div>
-  <div class="bar"><div id="nBar" class="fill"></div></div>
-
-  <div id="nightList"></div>
+<!-- PRODUCTS -->
+<div id="products" class="page">
+  <h3>🧴 Products</h3>
+  <div class="item">Cleanser — The Ordinary</div>
+  <div class="item">Glow Serum — Beauty of Joseon</div>
+  <div class="item">Moisturizer — Neutrogena Hydro Boost</div>
+  <div class="item">Sunscreen — Black Girl SPF</div>
+  <div class="item">Salicylic Acid — Acne treatment</div>
+  <div class="item">Retinol — Skin renewal</div>
+  <div class="item">Mugwort Clay Stick — Acne control</div>
 </div>
 
-<!-- TODAY -->
-<div class="section">
-  <div>📊 Today <span id="dPct">0%</span></div>
-  <div class="bar"><div id="dBar" class="fill"></div></div>
+<!-- STATS -->
+<div id="stats" class="page">
+  <h3>📊 Stats</h3>
+
+  <div class="stats">
+    🔥 Current Streak: <span id="streak">0</span><br>
+    🏆 Best Streak: <span id="best">0</span><br>
+    📅 Total Days Completed: <span id="total">0</span>
+  </div>
 </div>
 
-<!-- STREAK -->
-<div class="stats">
-🔥 Current Streak: <span id="streak">0</span><br>
-🏆 Best Streak: <span id="best">0</span><br>
-📅 Total Days Completed: <span id="total">0</span>
+<!-- AI -->
+<div id="ai" class="page">
+  <h3>🧠 AI</h3>
+  <div class="item">Coming soon</div>
 </div>
 
 </div>
@@ -161,7 +192,7 @@ new Date().toDateString();
 let days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 let selected=new Date().getDay();
 
-/* ROUTINE */
+/* ROUTINES */
 const schedule={
   0:{type:"Recovery",night:["Cleanser","Moisturizer"]},
   1:{type:"Acne",night:["Cleanser","Salicylic Acid","Moisturizer"]},
@@ -172,27 +203,35 @@ const schedule={
   6:{type:"Acne",night:["Cleanser","Salicylic Acid","Moisturizer"]}
 };
 
-/* MORNING */
 const morning=[
-  "Cleanser - The Ordinary",
-  "Glow Serum - Beauty of Joseon",
-  "Moisturizer - Neutrogena Hydro Boost",
-  "Sunscreen - Black Girl SPF"
+  "Cleanser",
+  "Glow Serum",
+  "Moisturizer",
+  "Sunscreen"
 ];
 
 /* STATE */
 let state={};
 for(let i=0;i<7;i++){
-  state[i]={m:[],n:[]};
+  state[i]={m:[],n:[],done:false};
 }
 
-/* STREAK SYSTEM */
-let streakData={
+/* STREAK */
+let streak={
   current:0,
   best:0,
   total:0,
-  lastCompletedDay:-1
+  lastDay:-1
 };
+
+/* TAB SYSTEM */
+function openTab(id,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
+}
 
 /* CALENDAR */
 function buildCalendar(){
@@ -200,14 +239,11 @@ function buildCalendar(){
   c.innerHTML="";
 
   days.forEach((d,i)=>{
-    let el=document.createElement("div");
-    el.className="day"+(i===selected?" active":"");
-    el.innerText=d;
-    el.onclick=()=>{
-      selected=i;
-      render();
-    };
-    c.appendChild(el);
+    let div=document.createElement("div");
+    div.className="day"+(i===selected?" active":"");
+    div.innerText=d;
+    div.onclick=()=>{selected=i;render();};
+    c.appendChild(div);
   });
 }
 
@@ -217,7 +253,7 @@ function toggle(type,i){
   render();
 }
 
-/* BUILD UI */
+/* BUILD */
 function build(){
 
   let s=state[selected];
@@ -238,34 +274,38 @@ function build(){
   ).join("");
 }
 
-/* STREAK CHECK */
-function checkStreak(){
+/* STREAK LOGIC (FIXED) */
+function updateStreak(){
 
   let s=state[selected];
 
-  let mDone=s.m.filter(Boolean).length===morning.length;
-  let nDone=s.n.filter(Boolean).length===schedule[selected].night.length;
+  let mDone = s.m.every(v=>v===true);
+  let nDone = s.n.every(v=>v===true);
 
-  let fullDay=mDone && nDone;
+  let full = mDone && nDone;
 
-  if(fullDay && streakData.lastCompletedDay!==selected){
+  if(full && streak.lastDay !== selected){
+    streak.current++;
+    streak.total++;
 
-    streakData.current++;
-    streakData.total++;
-
-    if(streakData.current>streakData.best){
-      streakData.best=streakData.current;
+    if(streak.current > streak.best){
+      streak.best = streak.current;
     }
 
-    streakData.lastCompletedDay=selected;
+    streak.lastDay = selected;
+    state[selected].done = true;
   }
 
-  if(!fullDay && streakData.lastCompletedDay!==selected){
-    streakData.current=0;
+  if(!full && state[selected].done){
+    state[selected].done = false;
+  }
+
+  if(!full && streak.lastDay !== selected){
+    streak.current = 0;
   }
 }
 
-/* UPDATE UI */
+/* PROGRESS */
 function update(){
 
   let s=state[selected];
@@ -282,17 +322,17 @@ function update(){
   document.getElementById("nPct").innerText=Math.round(nPct)+"%";
   document.getElementById("dPct").innerText=Math.round(dPct)+"%";
 
-  document.getElementById("streak").innerText=streakData.current;
-  document.getElementById("best").innerText=streakData.best;
-  document.getElementById("total").innerText=streakData.total;
+  document.getElementById("streak").innerText=streak.current;
+  document.getElementById("best").innerText=streak.best;
+  document.getElementById("total").innerText=streak.total;
 }
 
-/* MAIN */
+/* RENDER */
 function render(){
   buildCalendar();
   build();
   update();
-  checkStreak();
+  updateStreak();
 }
 
 render();
