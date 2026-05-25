@@ -1,136 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V3 Stable</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #0b0b10;
-  color: white;
-}
-
-header {
-  text-align: center;
-  padding: 15px;
-  background: #141420;
-  font-weight: bold;
-}
-
-.screen {
-  display: none;
-  padding: 15px;
-  padding-bottom: 80px;
-}
-
-.active {
-  display: block;
-}
-
-.card {
-  background: #1a1a24;
-  padding: 12px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-}
-
-.item {
-  background: #222;
-  padding: 10px;
-  margin-top: 8px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.done {
-  opacity: 0.5;
-  text-decoration: line-through;
-}
-
-/* NAV */
-.nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  background: #141420;
-}
-
-.nav button {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  background: none;
-  color: white;
-}
-</style>
-</head>
-
-<body>
-
-<header>🔥 Daily Lift V3 Stable</header>
-
-<!-- HOME -->
-<div id="home" class="screen active">
-  <div class="card">
-    <h2>🌅 Morning Lift</h2>
-    <div class="item" onclick="toggle(this)">Cleanser</div>
-    <div class="item" onclick="toggle(this)">Glow Serum</div>
-    <div class="item" onclick="toggle(this)">Sunscreen</div>
-  </div>
-
-  <div class="card">
-    <h2>🌙 Night Lift</h2>
-    <div class="item" onclick="toggle(this)">Cleanser</div>
-    <div class="item" onclick="toggle(this)">Moisturizer</div>
-  </div>
-</div>
-
-<!-- PRODUCTS -->
 <div id="products" class="screen">
+
   <div class="card">
     <h2>🧴 Products</h2>
-    <p>Stable version ready ✔️ (we will re-add images next)</p>
+    <p>Tap a product card. Images are stable placeholders (we upgrade to real images next).</p>
   </div>
-</div>
 
-<!-- STATS -->
-<div id="stats" class="screen">
   <div class="card">
-    <h2>📊 Stats</h2>
-    <p>Coming next</p>
+    <h3>The Ordinary Glucoside Foaming Cleanser</h3>
+    <img src="https://via.placeholder.com/400x200?text=Cleanser+The+Ordinary">
+    <p>Removes dirt, oil, and buildup while keeping your skin barrier balanced. Helps prevent breakouts and prepares skin for treatments.</p>
   </div>
-</div>
 
-<!-- AI -->
-<div id="ai" class="screen">
   <div class="card">
-    <h2>🧠 AI</h2>
-    <p>Coming next</p>
+    <h3>Beauty of Joseon Glow Serum</h3>
+    <img src="https://via.placeholder.com/400x200?text=Glow+Serum">
+    <p>Brightens skin, reduces redness, and helps improve texture and acne marks over time.</p>
   </div>
+
+  <div class="card">
+    <h3>Black Girl Sunscreen SPF 30</h3>
+    <img src="https://via.placeholder.com/400x200?text=Sunscreen">
+    <p>Protects skin from UV damage, prevents dark spots, and protects results from acne treatments.</p>
+  </div>
+
+  <div class="card">
+    <h3>Neutrogena Hydro Boost Water Gel</h3>
+    <img src="https://via.placeholder.com/400x200?text=Moisturizer">
+    <p>Lightweight hydration that prevents dryness caused by acne treatments like retinol or salicylic acid.</p>
+  </div>
+
+  <div class="card">
+    <h3>The Ordinary Salicylic Acid 2%</h3>
+    <img src="https://via.placeholder.com/400x200?text=Salicylic+Acid">
+    <p>Deep pore treatment that clears blackheads, whiteheads, and prevents new acne.</p>
+  </div>
+
+  <div class="card">
+    <h3>Pair Acne Cream</h3>
+    <img src="https://via.placeholder.com/400x200?text=Acne+Cream">
+    <p>Spot treatment that reduces active pimples and inflammation quickly.</p>
+  </div>
+
+  <div class="card">
+    <h3>Retinol Treatment</h3>
+    <img src="https://via.placeholder.com/400x200?text=Retinol">
+    <p>Improves skin texture, fades acne marks, and boosts long-term skin clarity.</p>
+  </div>
+
+  <div class="card">
+    <h3>Mugwort Green Skin Mask</h3>
+    <img src="https://via.placeholder.com/400x200?text=Mask">
+    <p>Calms redness, soothes irritation, and supports recovery nights.</p>
+  </div>
+
 </div>
-
-<!-- NAV -->
-<div class="nav">
-  <button onclick="showTab('home')">Home</button>
-  <button onclick="showTab('products')">Products</button>
-  <button onclick="showTab('stats')">Stats</button>
-  <button onclick="showTab('ai')">AI</button>
-</div>
-
-<script>
-function showTab(id){
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  const el = document.getElementById(id);
-  if (el) el.classList.add("active");
-}
-
-function toggle(el){
-  el.classList.toggle("done");
-}
-</script>
-
-</body>
-</html>
