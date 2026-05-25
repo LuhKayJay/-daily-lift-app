@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V3.6</title>
+<title>Daily Lift V3.7</title>
 
 <style>
 body {
   margin: 0;
   font-family: system-ui;
-  background: radial-gradient(circle at top, #1a1a2e, #0b0b10);
+  background: radial-gradient(circle at top, #16162a, #0b0b10);
   color: white;
 }
 
@@ -16,19 +16,20 @@ body {
 .app {
   max-width: 420px;
   margin: auto;
+  padding: 16px;
 }
 
 /* HEADER */
 header {
   text-align: center;
-  padding: 12px;
-  font-weight: bold;
+  font-weight: 600;
+  padding: 10px 0 5px;
+  font-size: 18px;
 }
 
-/* SCREEN */
+/* SCREENS */
 .screen {
   display: none;
-  padding: 12px;
   padding-bottom: 90px;
 }
 
@@ -36,35 +37,37 @@ header {
   display: block;
 }
 
-/* CARD */
-.card {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 10px;
-  margin-bottom: 10px;
+/* SECTION (NOT BOXES) */
+.section {
+  margin: 18px 0;
 }
 
-/* ITEM */
-.item {
+/* LIGHT DIVIDERS */
+.divider {
+  height: 1px;
   background: rgba(255,255,255,0.08);
-  padding: 8px;
-  margin-top: 6px;
-  border-radius: 10px;
-  font-size: 13px;
+  margin: 10px 0;
 }
 
-.done {
-  opacity: 0.4;
+/* TEXT ITEMS (NO BOXES) */
+.item {
+  padding: 10px 0;
+  font-size: 15px;
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+.item.done {
   text-decoration: line-through;
+  opacity: 0.4;
 }
 
-/* SMALL PROGRESS BAR */
+/* PROGRESS BARS (MINIMAL) */
 .bar {
   width: 100%;
-  height: 6px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 10px;
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 20px;
   overflow: hidden;
 }
 
@@ -79,31 +82,32 @@ header {
 .circleWrap {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  margin: 20px 0;
 }
 
 .circle {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: conic-gradient(#6c5ce7 0%, rgba(255,255,255,0.1) 0%);
+  background: conic-gradient(#6c5ce7 0%, rgba(255,255,255,0.08) 0%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 /* NAV */
 .nav {
   position: fixed;
-  bottom: 10px;
+  bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
   width: 95%;
   max-width: 420px;
   display: flex;
-  background: rgba(20,20,30,0.8);
-  border-radius: 16px;
+  background: rgba(20,20,30,0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
   padding: 6px;
   border: 1px solid rgba(255,255,255,0.08);
 }
@@ -114,17 +118,17 @@ header {
   border: none;
   color: #aaa;
   font-size: 11px;
+  padding: 8px 0;
 }
 
 .nav button.activeTab {
   color: white;
-  background: rgba(108,92,231,0.2);
-  border-radius: 12px;
 }
 
 .tabIcon {
   display: block;
   font-size: 16px;
+  margin-bottom: 2px;
 }
 </style>
 </head>
@@ -133,83 +137,66 @@ header {
 
 <div class="app">
 
-<header>🔥 Daily Lift V3.6</header>
+<header>🔥 Daily Lift V3.7</header>
 
 <!-- HOME -->
 <div id="home" class="screen active">
 
-  <div class="card">
-    <h3>📅 Today</h3>
-    <p id="date"></p>
+  <div class="section">
+    <div style="opacity:0.6;font-size:13px;" id="date"></div>
+    <div style="margin-top:4px;opacity:0.8;" id="todayLabel"></div>
   </div>
 
-  <div class="card">
-    <h4>🌅 Morning</h4>
+  <div class="divider"></div>
+
+  <div class="section">
+    <div style="font-weight:600;">🌅 Morning</div>
     <div class="bar"><div id="mBar" class="fill"></div></div>
-  </div>
 
-  <div class="card">
-    <h4>🌙 Night</h4>
-    <div class="bar"><div id="nBar" class="fill"></div></div>
-  </div>
-
-  <div class="card">
-    <h4>📊 Daily</h4>
-    <div class="bar"><div id="dBar" class="fill"></div></div>
-  </div>
-
-  <div class="card">
-    <h4>🌅 Morning Lift</h4>
     <div class="item" onclick="toggle(this,'m')">Cleanser</div>
     <div class="item" onclick="toggle(this,'m')">Glow Serum</div>
     <div class="item" onclick="toggle(this,'m')">Sunscreen</div>
   </div>
 
-  <div class="card">
-    <h4>🌙 Night Lift</h4>
+  <div class="divider"></div>
+
+  <div class="section">
+    <div style="font-weight:600;">🌙 Night</div>
+    <div class="bar"><div id="nBar" class="fill"></div></div>
+
     <div class="item" onclick="toggle(this,'n')">Cleanser</div>
     <div class="item" onclick="toggle(this,'n')">Moisturizer</div>
     <div class="item" onclick="toggle(this,'n')">Retinol</div>
   </div>
 
+  <div class="divider"></div>
+
+  <div class="section">
+    <div style="font-weight:600;">📊 Daily Progress</div>
+    <div class="bar"><div id="dBar" class="fill"></div></div>
+  </div>
+
 </div>
 
-<!-- PRODUCTS -->
+<!-- PRODUCTS (NO BOXES, CLEAN LIST) -->
 <div id="products" class="screen">
 
-  <div class="card">
-    <h2>🧴 Products</h2>
-    <p>Information-based skincare system</p>
+  <div class="section">
+    <div style="font-weight:600;">🧴 Products</div>
+    <div style="opacity:0.6;font-size:13px;margin-top:5px;">
+      Simple skincare reference
+    </div>
   </div>
 
-  <div class="card">
-    <h4>Cleanser (The Ordinary)</h4>
-    <p>Removes dirt + oil while protecting skin barrier.</p>
-  </div>
+  <div class="divider"></div>
 
-  <div class="card">
-    <h4>Glow Serum (Beauty of Joseon)</h4>
-    <p>Helps brighten skin, reduce redness, improve texture.</p>
-  </div>
-
-  <div class="card">
-    <h4>Sunscreen (Black Girl SPF 30)</h4>
-    <p>Protects against UV damage + prevents dark spots.</p>
-  </div>
-
-  <div class="card">
-    <h4>Moisturizer (Hydro Boost)</h4>
-    <p>Light hydration that doesn’t clog pores.</p>
-  </div>
-
-  <div class="card">
-    <h4>Salicylic Acid 2%</h4>
-    <p>Clears pores and prevents acne formation.</p>
-  </div>
-
-  <div class="card">
-    <h4>Retinol</h4>
-    <p>Improves texture + fades acne marks over time.</p>
+  <div class="section">
+    <div class="item">Cleanser — removes oil + buildup, protects barrier</div>
+    <div class="item">Glow Serum — reduces redness + boosts glow</div>
+    <div class="item">Sunscreen — prevents dark spots + UV damage</div>
+    <div class="item">Moisturizer — hydrates without clogging pores</div>
+    <div class="item">Salicylic Acid — clears pores + acne prevention</div>
+    <div class="item">Retinol — smooths skin + fades marks</div>
   </div>
 
 </div>
@@ -217,23 +204,23 @@ header {
 <!-- STATS -->
 <div id="stats" class="screen">
 
-  <div class="card">
-    <h2>📊 Weekly Tracker</h2>
+  <div class="section">
+    <div style="font-weight:600;">📊 Skin Tracker</div>
+  </div>
 
-    <div class="circleWrap">
-      <div id="circle" class="circle">0%</div>
-    </div>
-
-    <p style="text-align:center;margin-top:10px;">Overall Completion</p>
+  <div class="circleWrap">
+    <div id="circle" class="circle">0%</div>
   </div>
 
 </div>
 
 <!-- AI -->
 <div id="ai" class="screen">
-  <div class="card">
-    <h2>🧠 AI</h2>
-    <p>Coming next: smart routine adjustments</p>
+  <div class="section">
+    <div style="font-weight:600;">🧠 AI</div>
+    <div style="opacity:0.6;margin-top:5px;">
+      Coming next: smart routine adjustments
+    </div>
   </div>
 </div>
 
@@ -241,41 +228,39 @@ header {
 
 <!-- NAV -->
 <div class="nav">
-  <button onclick="show('home',this)">🏠<br>Home</button>
-  <button onclick="show('products',this)">🧴<br>Products</button>
-  <button onclick="show('stats',this)">📊<br>Stats</button>
-  <button onclick="show('ai',this)">🧠<br>AI</button>
+  <button onclick="show('home',this)">🏠<span class="tabIcon">Home</span></button>
+  <button onclick="show('products',this)">🧴<span class="tabIcon">Products</span></button>
+  <button onclick="show('stats',this)">📊<span class="tabIcon">Stats</span></button>
+  <button onclick="show('ai',this)">🧠<span class="tabIcon">AI</span></button>
 </div>
 
 <script>
 
-let m = 0;
-let n = 0;
+let m=0,n=0;
 
 function toggle(el,type){
   el.classList.toggle("done");
 
-  if(type === "m") m++;
-  if(type === "n") n++;
+  if(type==="m") m++;
+  if(type==="n") n++;
 
   update();
 }
 
 function update(){
 
-  let mPct = Math.min((m/3)*100,100);
-  let nPct = Math.min((n/3)*100,100);
-  let dPct = (mPct + nPct)/2;
+  let mPct=Math.min((m/3)*100,100);
+  let nPct=Math.min((n/3)*100,100);
+  let dPct=(mPct+nPct)/2;
 
-  document.getElementById("mBar").style.width = mPct + "%";
-  document.getElementById("nBar").style.width = nPct + "%";
-  document.getElementById("dBar").style.width = dPct + "%";
+  document.getElementById("mBar").style.width=mPct+"%";
+  document.getElementById("nBar").style.width=nPct+"%";
+  document.getElementById("dBar").style.width=dPct+"%";
 
-  document.getElementById("circle").style.background =
-    `conic-gradient(#6c5ce7 ${dPct}%, rgba(255,255,255,0.1) ${dPct}%)`;
+  document.getElementById("circle").style.background=
+    `conic-gradient(#6c5ce7 ${dPct}%, rgba(255,255,255,0.08) ${dPct}%)`;
 
-  document.getElementById("circle").innerText =
-    Math.round(dPct) + "%";
+  document.getElementById("circle").innerText=Math.round(dPct)+"%";
 }
 
 function show(id,btn){
@@ -286,8 +271,8 @@ function show(id,btn){
   btn.classList.add("activeTab");
 }
 
-document.getElementById("date").innerText =
-  new Date().toDateString();
+document.getElementById("date").innerText=new Date().toDateString();
+document.getElementById("todayLabel").innerText="Stay consistent today";
 
 </script>
 
