@@ -1,138 +1,69 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V3 Fixed</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #0b0b10;
-  color: white;
-}
-
-header {
-  text-align: center;
-  padding: 15px;
-  background: #141420;
-  font-weight: bold;
-}
-
-.screen {
-  display: none;
-  padding: 15px;
-  padding-bottom: 80px;
-}
-
-.active {
-  display: block;
-}
-
-.card {
-  background: #1a1a24;
-  padding: 12px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-}
-
-.item {
-  background: #222;
-  padding: 10px;
-  margin-top: 8px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.done {
-  text-decoration: line-through;
-  opacity: 0.5;
-}
-
-/* NAV */
-.nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  background: #141420;
-}
-
-.nav button {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  background: none;
-  color: white;
-}
-</style>
-</head>
-
-<body>
-
-<header>🔥 Daily Lift V3 FIXED</header>
-
-<!-- HOME -->
-<div id="home" class="screen active">
-  <div class="card">
-    <h2>🌅 Morning Lift</h2>
-    <div class="item" onclick="toggle(this)">Cleanser - The Ordinary</div>
-    <div class="item" onclick="toggle(this)">Glow Serum - Beauty of Joseon</div>
-    <div class="item" onclick="toggle(this)">Sunscreen - Black Girl SPF 30</div>
-  </div>
-
-  <div class="card">
-    <h2>🌙 Night Lift</h2>
-    <div class="item" onclick="toggle(this)">Cleanser</div>
-    <div class="item" onclick="toggle(this)">Moisturizer - Hydro Boost</div>
-  </div>
-</div>
-
-<!-- PRODUCTS -->
 <div id="products" class="screen">
   <div class="card">
     <h2>🧴 Products</h2>
-    <p>Products tab working ✔️ (next upgrade adds images)</p>
   </div>
-</div>
 
-<!-- STATS -->
-<div id="stats" class="screen">
+  <!-- Cleanser -->
   <div class="card">
-    <h2>📊 Stats</h2>
-    <p>Stats tab working ✔️</p>
+    <h3>The Ordinary Glucoside Foaming Cleanser</h3>
+    <img src="https://www.deciem.com/media/export/cms/products/2000x2000/ordinary-the-foaming-cleanser-1.jpg" 
+         onerror="this.src='https://via.placeholder.com/400x200?text=Cleanser'">
+    <p>Cleans your skin by removing oil, dirt, and buildup without stripping your skin barrier. Helps keep skin clear and prepares it for treatments.</p>
   </div>
-</div>
 
-<!-- AI -->
-<div id="ai" class="screen">
+  <!-- Glow Serum -->
   <div class="card">
-    <h2>🧠 AI</h2>
-    <p>AI coming next ✔️</p>
+    <h3>Beauty of Joseon Glow Serum (Propolis + Niacinamide)</h3>
+    <img src="https://www.beautyofjoseon.com/cdn/shop/products/glow_serum.jpg"
+         onerror="this.src='https://via.placeholder.com/400x200?text=Glow+Serum'">
+    <p>Helps brighten skin, reduce redness, and improve overall texture. Supports glow and calming inflammation from acne.</p>
+  </div>
+
+  <!-- Sunscreen -->
+  <div class="card">
+    <h3>Black Girl Sunscreen SPF 30 (Kids)</h3>
+    <img src="https://blackgirlsunscreen.com/cdn/shop/products/kids_spf_30.jpg"
+         onerror="this.src='https://via.placeholder.com/400x200?text=Sunscreen'">
+    <p>Protects your skin from UV damage, dark spots, and long-term acne scarring. Essential for keeping skin healthy while using actives like retinol and salicylic acid.</p>
+  </div>
+
+  <!-- Moisturizer -->
+  <div class="card">
+    <h3>Neutrogena Hydro Boost Water Gel</h3>
+    <img src="https://www.neutrogena.com/dw/image/v2/BHZW_PRD/on/demandware.static/-/Sites-neutrogena-master/default/dw8b7c0d/hydro-boost-water-gel.jpg"
+         onerror="this.src='https://via.placeholder.com/400x200?text=Moisturizer'">
+    <p>Hydrates skin using lightweight gel moisture. Helps prevent dryness caused by acne treatments and keeps skin barrier balanced.</p>
+  </div>
+
+  <!-- Salicylic Acid -->
+  <div class="card">
+    <h3>The Ordinary Salicylic Acid 2%</h3>
+    <img src="https://www.deciem.com/media/export/cms/products/2000x2000/ordinary-salicylic-acid-2-percent-solution-1.jpg"
+         onerror="this.src='https://via.placeholder.com/400x200?text=Salicylic'">
+    <p>Penetrates pores to clear blackheads, whiteheads, and active acne. Helps reduce breakouts and prevents clogged pores.</p>
+  </div>
+
+  <!-- Acne Cream -->
+  <div class="card">
+    <h3>Pair Acne Cream</h3>
+    <img src="https://via.placeholder.com/400x200?text=Pair+Acne+Cream"
+         onerror="this.src='https://via.placeholder.com/400x200?text=Acne+Cream'">
+    <p>Spot treatment that reduces active pimples by targeting inflammation and bacteria directly on breakouts.</p>
+  </div>
+
+  <!-- Retinol -->
+  <div class="card">
+    <h3>Retinol Treatment</h3>
+    <img src="https://via.placeholder.com/400x200?text=Retinol"
+         onerror="this.src='https://via.placeholder.com/400x200?text=Retinol'">
+    <p>Helps smooth skin texture, fade acne marks, and improve long-term skin clarity by increasing skin cell turnover.</p>
+  </div>
+
+  <!-- Mask -->
+  <div class="card">
+    <h3>Mugwort Green Skin Mask</h3>
+    <img src="https://via.placeholder.com/400x200?text=Mask"
+         onerror="this.src='https://via.placeholder.com/400x200?text=Mask'">
+    <p>Calms irritation, reduces redness, and helps soothe inflamed or stressed skin. Used for recovery nights.</p>
   </div>
 </div>
-
-<!-- NAV -->
-<div class="nav">
-  <button onclick="showTab('home')">Home</button>
-  <button onclick="showTab('products')">Products</button>
-  <button onclick="showTab('stats')">Stats</button>
-  <button onclick="showTab('ai')">AI</button>
-</div>
-
-<script>
-function showTab(id){
-  const screens = document.querySelectorAll(".screen");
-  screens.forEach(s => s.classList.remove("active"));
-
-  const target = document.getElementById(id);
-  if (target) target.classList.add("active");
-}
-
-function toggle(el){
-  el.classList.toggle("done");
-}
-</script>
-
-</body>
-</html>
