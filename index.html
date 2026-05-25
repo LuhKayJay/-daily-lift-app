@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V4.1</title>
+<title>Daily Lift V4.2</title>
 
 <style>
 body{
@@ -18,17 +18,38 @@ body{
   padding:12px;
 }
 
+/* HEADER */
 header{
   text-align:center;
   font-weight:600;
-  margin-bottom:8px;
 }
 
 .date{
   text-align:center;
   font-size:13px;
   opacity:0.7;
+  margin:6px 0 10px;
+}
+
+/* TABS (RESTORED FIXED) */
+.tabs{
+  display:flex;
+  justify-content:space-between;
   margin-bottom:10px;
+}
+
+.tab{
+  flex:1;
+  text-align:center;
+  font-size:12px;
+  padding:6px;
+  opacity:0.6;
+  cursor:pointer;
+}
+
+.tab.active{
+  opacity:1;
+  border-bottom:2px solid #6c5ce7;
 }
 
 /* CALENDAR */
@@ -36,45 +57,30 @@ header{
   display:flex;
   justify-content:space-between;
   font-size:11px;
-  margin-bottom:10px;
+  margin:10px 0;
 }
 
 .day{
   flex:1;
   text-align:center;
   padding:6px;
-  border-radius:8px;
   opacity:0.6;
   cursor:pointer;
 }
 
-.activeDay{
+.day.active{
   background:rgba(108,92,231,0.3);
   opacity:1;
+  border-radius:8px;
 }
 
-/* PROGRESS */
-.bar{
-  height:6px;
-  background:rgba(255,255,255,0.1);
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:5px;
-}
-
-.fill{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#6c5ce7,#00d2ff);
-}
-
-/* ITEMS */
+/* SECTIONS */
 .section{
   margin:12px 0;
 }
 
 .item{
-  padding:8px 0;
+  padding:7px 0;
   font-size:14px;
   cursor:pointer;
   opacity:0.9;
@@ -85,10 +91,30 @@ header{
   opacity:0.3;
 }
 
+/* PROGRESS */
+.bar{
+  height:6px;
+  background:rgba(255,255,255,0.1);
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:4px;
+}
+
+.fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#6c5ce7,#00d2ff);
+}
+
 .pct{
   font-size:12px;
   opacity:0.7;
 }
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
 </style>
 </head>
 
@@ -96,58 +122,101 @@ header{
 
 <div class="app">
 
-<header>🔥 Daily Lift V4.1 (Locked Routine)</header>
+<header>🔥 Daily Lift V4.2</header>
 <div class="date" id="date"></div>
+
+<!-- TABS (FIXED) -->
+<div class="tabs">
+  <div class="tab active" onclick="openTab('home',this)">🏠 Home</div>
+  <div class="tab" onclick="openTab('products',this)">🧴 Products</div>
+  <div class="tab" onclick="openTab('stats',this)">📊 Stats</div>
+  <div class="tab" onclick="openTab('ai',this)">🧠 AI</div>
+</div>
 
 <!-- CALENDAR -->
 <div class="calendar" id="calendar"></div>
 
-<!-- MORNING -->
-<div class="section">
-  <div>🌅 Morning <span class="pct" id="mPct">0%</span></div>
-  <div class="bar"><div id="mBar" class="fill"></div></div>
+<!-- HOME -->
+<div id="home" class="page active">
 
-  <div id="morningList"></div>
+  <div class="section">
+    <div>🌅 Morning <span class="pct" id="mPct">0%</span></div>
+    <div class="bar"><div id="mBar" class="fill"></div></div>
+    <div id="morningList"></div>
+  </div>
+
+  <div class="section">
+    <div>🌙 Night — <span id="nightType"></span> <span class="pct" id="nPct">0%</span></div>
+    <div class="bar"><div id="nBar" class="fill"></div></div>
+    <div id="nightList"></div>
+  </div>
+
+  <div class="section">
+    <div>📊 Today <span class="pct" id="dPct">0%</span></div>
+    <div class="bar"><div id="dBar" class="fill"></div></div>
+  </div>
+
 </div>
 
-<!-- NIGHT -->
-<div class="section">
-  <div>🌙 Night — <span id="nightType">Loading...</span> <span class="pct" id="nPct">0%</span></div>
-  <div class="bar"><div id="nBar" class="fill"></div></div>
-
-  <div id="nightList"></div>
+<!-- PRODUCTS -->
+<div id="products" class="page">
+  <div class="section">
+    <h3>🧴 Products</h3>
+    <div class="item">Cleanser — The Ordinary</div>
+    <div class="item">Glow Serum — Beauty of Joseon</div>
+    <div class="item">Sunscreen — Black Girl SPF</div>
+    <div class="item">Moisturizer — Hydro Boost</div>
+    <div class="item">Salicylic Acid — Acne treatment</div>
+    <div class="item">Retinol — Skin renewal</div>
+  </div>
 </div>
 
-<!-- DAILY -->
-<div class="section">
-  <div>📊 Today <span class="pct" id="dPct">0%</span></div>
-  <div class="bar"><div id="dBar" class="fill"></div></div>
+<!-- STATS -->
+<div id="stats" class="page">
+  <div class="section">
+    <h3>📊 Stats</h3>
+    <div class="item">Morning %: <span id="sM">0</span>%</div>
+    <div class="item">Night %: <span id="sN">0</span>%</div>
+    <div class="item">Today %: <span id="sT">0</span>%</div>
+  </div>
+</div>
+
+<!-- AI -->
+<div id="ai" class="page">
+  <div class="section">
+    <h3>🧠 AI</h3>
+    <div class="item">Coming soon: smart routine assistant</div>
+  </div>
 </div>
 
 </div>
 
 <script>
 
-let days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+/* ===== DATE ALWAYS PRESENT ===== */
+document.getElementById("date").innerText =
+new Date().toDateString();
+
+/* ===== CORE STATE ===== */
+let days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 let selected=new Date().getDay();
 
-/* 🔒 LOCKED WEEKLY ROUTINE */
-const schedule = {
+/* LOCKED ROUTINE */
+const schedule={
   0:{type:"Recovery",night:["Cleanser","Moisturizer"]},
-  1:{type:"Acne",night:["Cleanser","Salicylic Acid 2%","Moisturizer"]},
+  1:{type:"Acne",night:["Cleanser","Salicylic Acid","Moisturizer"]},
   2:{type:"Recovery",night:["Cleanser","Moisturizer"]},
   3:{type:"Retinol",night:["Cleanser","Retinol","Moisturizer"]},
   4:{type:"Recovery",night:["Cleanser","Moisturizer"]},
   5:{type:"Mask",night:["Cleanser","Mask","Moisturizer"]},
-  6:{type:"Acne",night:["Cleanser","Salicylic Acid 2%","Moisturizer"]}
+  6:{type:"Acne",night:["Cleanser","Salicylic Acid","Moisturizer"]}
 };
 
-/* MORNING IS ALWAYS FIXED */
 const morning=[
-  "Cleanser - The Ordinary",
-  "Glow Serum - Beauty of Joseon",
-  "Moisturizer - Hydro Boost",
-  "Sunscreen - Black Girl SPF"
+  "Cleanser",
+  "Glow Serum",
+  "Moisturizer",
+  "Sunscreen"
 ];
 
 /* STATE PER DAY */
@@ -156,77 +225,66 @@ for(let i=0;i<7;i++){
   state[i]={m:[],n:[]};
 }
 
-/* INIT MORNING TEMPLATE */
-function initDay(i){
-  if(state[i].m.length===0){
-    state[i.m]=morning.map(()=>false);
-  }
-  if(state[i].n.length===0){
-    state[i].n=schedule[i].night.map(()=>false);
-  }
+/* ===== TAB SYSTEM FIXED ===== */
+function openTab(id,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
 }
 
+/* ===== CALENDAR (WORKING) ===== */
 function buildCalendar(){
   let c=document.getElementById("calendar");
   c.innerHTML="";
 
   days.forEach((d,i)=>{
-    let el=document.createElement("div");
-    el.className="day"+(i===selected?" activeDay":"");
-    el.innerText=d.slice(0,3);
-    el.onclick=()=>{
+    let div=document.createElement("div");
+    div.className="day"+(i===selected?" active":"");
+    div.innerText=d;
+    div.onclick=()=>{
       selected=i;
       render();
     };
-    c.appendChild(el);
+    c.appendChild(div);
   });
 }
 
-/* BUILD LISTS */
-function buildLists(){
+/* ===== TOGGLE ===== */
+function toggle(type,i){
+  state[selected][type][i]=!state[selected][type][i];
+  render();
+}
 
-  initDay(selected);
+/* ===== BUILD LISTS ===== */
+function build(){
 
-  let mDiv=document.getElementById("morningList");
-  let nDiv=document.getElementById("nightList");
+  let s=state[selected];
 
-  mDiv.innerHTML="";
-  nDiv.innerHTML="";
+  document.getElementById("morningList").innerHTML=
+  morning.map((x,i)=>
+    `<div class="item ${s.m[i]?'done':''}" onclick="toggle('m',${i})">${x}</div>`
+  ).join("");
 
-  morning.forEach((item,i)=>{
-    let el=document.createElement("div");
-    el.className="item"+(state[selected].m[i]?" done":"");
-    el.innerText=item;
-    el.onclick=()=>{
-      state[selected].m[i]=!state[selected].m[i];
-      render();
-    };
-    mDiv.appendChild(el);
-  });
-
-  schedule[selected].night.forEach((item,i)=>{
-    let el=document.createElement("div");
-    el.className="item"+(state[selected].n[i]?" done":"");
-    el.innerText=item;
-    el.onclick=()=>{
-      state[selected].n[i]=!state[selected].n[i];
-      render();
-    };
-    nDiv.appendChild(el);
-  });
+  let night=schedule[selected].night;
 
   document.getElementById("nightType").innerText=
-    schedule[selected].type;
+  schedule[selected].type;
+
+  document.getElementById("nightList").innerHTML=
+  night.map((x,i)=>
+    `<div class="item ${s.n[i]?'done':''}" onclick="toggle('n',${i})">${x}</div>`
+  ).join("");
 }
 
-/* UPDATE PROGRESS */
+/* ===== UPDATE PROGRESS ===== */
 function update(){
 
-  let mDone=state[selected].m.filter(Boolean).length;
-  let nDone=state[selected].n.filter(Boolean).length;
+  let s=state[selected];
 
-  let mPct=(mDone/morning.length)*100;
-  let nPct=(nDone/schedule[selected].night.length)*100;
+  let mPct=(s.m.filter(Boolean).length/morning.length)*100;
+  let nPct=(s.n.filter(Boolean).length/schedule[selected].night.length)*100;
   let dPct=(mPct+nPct)/2;
 
   document.getElementById("mBar").style.width=mPct+"%";
@@ -236,17 +294,18 @@ function update(){
   document.getElementById("mPct").innerText=Math.round(mPct)+"%";
   document.getElementById("nPct").innerText=Math.round(nPct)+"%";
   document.getElementById("dPct").innerText=Math.round(dPct)+"%";
+
+  document.getElementById("sM").innerText=Math.round(mPct);
+  document.getElementById("sN").innerText=Math.round(nPct);
+  document.getElementById("sT").innerText=Math.round(dPct);
 }
 
-/* MAIN RENDER */
+/* ===== MAIN ===== */
 function render(){
   buildCalendar();
-  buildLists();
+  build();
   update();
 }
-
-document.getElementById("date").innerText=
-new Date().toDateString();
 
 render();
 
