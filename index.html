@@ -2,79 +2,93 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V3.9</title>
+<title>Daily Lift V4.1</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: system-ui;
-  background: radial-gradient(circle at top, #1a1a2e, #0b0b10);
-  color: white;
+body{
+  margin:0;
+  font-family:system-ui;
+  background:radial-gradient(circle at top,#1a1a2e,#0b0b10);
+  color:white;
 }
 
-.app {
-  max-width: 420px;
-  margin: auto;
-  padding: 12px;
+.app{
+  max-width:420px;
+  margin:auto;
+  padding:12px;
+}
+
+header{
+  text-align:center;
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+.date{
+  text-align:center;
+  font-size:13px;
+  opacity:0.7;
+  margin-bottom:10px;
 }
 
 /* CALENDAR */
-.calendar {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  margin-bottom: 10px;
+.calendar{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  margin-bottom:10px;
 }
 
-.day {
-  flex: 1;
-  text-align: center;
-  padding: 6px;
-  border-radius: 8px;
-  opacity: 0.7;
-  cursor: pointer;
+.day{
+  flex:1;
+  text-align:center;
+  padding:6px;
+  border-radius:8px;
+  opacity:0.6;
+  cursor:pointer;
 }
 
-.activeDay {
-  background: rgba(108,92,231,0.3);
-  opacity: 1;
-}
-
-/* TEXT ITEMS (NO BOXES) */
-.item {
-  padding: 8px 0;
-  font-size: 14px;
-  cursor: pointer;
-  opacity: 0.9;
-}
-
-.done {
-  text-decoration: line-through;
-  opacity: 0.3;
+.activeDay{
+  background:rgba(108,92,231,0.3);
+  opacity:1;
 }
 
 /* PROGRESS */
-.bar {
-  height: 5px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 20px;
-  overflow: hidden;
+.bar{
+  height:6px;
+  background:rgba(255,255,255,0.1);
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:5px;
 }
 
-.fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg,#6c5ce7,#00d2ff);
-  transition: 0.2s;
+.fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#6c5ce7,#00d2ff);
 }
 
-/* STATS */
-.statLine {
-  font-size: 14px;
-  margin: 6px 0;
-  opacity: 0.9;
+/* ITEMS */
+.section{
+  margin:12px 0;
 }
 
+.item{
+  padding:8px 0;
+  font-size:14px;
+  cursor:pointer;
+  opacity:0.9;
+}
+
+.done{
+  text-decoration:line-through;
+  opacity:0.3;
+}
+
+.pct{
+  font-size:12px;
+  opacity:0.7;
+}
 </style>
 </head>
 
@@ -82,132 +96,159 @@ body {
 
 <div class="app">
 
-<header>🔥 Daily Lift V3.9</header>
+<header>🔥 Daily Lift V4.1 (Locked Routine)</header>
+<div class="date" id="date"></div>
 
 <!-- CALENDAR -->
 <div class="calendar" id="calendar"></div>
 
-<!-- HOME PROGRESS -->
+<!-- MORNING -->
 <div class="section">
-  <div>🌅 Morning</div>
+  <div>🌅 Morning <span class="pct" id="mPct">0%</span></div>
   <div class="bar"><div id="mBar" class="fill"></div></div>
 
-  <div class="item" onclick="toggle(this,'m')">Cleanser - The Ordinary</div>
-  <div class="item" onclick="toggle(this,'m')">Glow Serum - Beauty of Joseon</div>
-  <div class="item" onclick="toggle(this,'m')">Sunscreen - Black Girl SPF</div>
+  <div id="morningList"></div>
 </div>
 
+<!-- NIGHT -->
 <div class="section">
-  <div>🌙 Night</div>
+  <div>🌙 Night — <span id="nightType">Loading...</span> <span class="pct" id="nPct">0%</span></div>
   <div class="bar"><div id="nBar" class="fill"></div></div>
 
-  <div class="item" onclick="toggle(this,'n')">Cleanser</div>
-  <div class="item" onclick="toggle(this,'n')">Moisturizer - Hydro Boost</div>
-  <div class="item" onclick="toggle(this,'n')">Retinol</div>
+  <div id="nightList"></div>
 </div>
 
+<!-- DAILY -->
 <div class="section">
-  <div>📊 Daily Progress</div>
+  <div>📊 Today <span class="pct" id="dPct">0%</span></div>
   <div class="bar"><div id="dBar" class="fill"></div></div>
-</div>
-
-<!-- PRODUCTS (RESTORED NAMES) -->
-<div class="section">
-  <h3>🧴 Products</h3>
-
-  <div class="item">Cleanser — The Ordinary Glucoside Foaming Cleanser</div>
-  <div class="item">Glow Serum — Beauty of Joseon Propolis + Niacinamide</div>
-  <div class="item">Sunscreen — Black Girl Sunscreen SPF 30</div>
-  <div class="item">Moisturizer — Neutrogena Hydro Boost Water Gel</div>
-  <div class="item">Salicylic Acid — The Ordinary 2% Solution</div>
-  <div class="item">Retinol — Night treatment for acne + texture</div>
-</div>
-
-<!-- STATS (FULL TRACKERS RESTORED) -->
-<div class="section">
-  <h3>📊 Stats</h3>
-
-  <div class="statLine">Morning %: <span id="mPct">0</span>%</div>
-  <div class="statLine">Night %: <span id="nPct">0</span>%</div>
-  <div class="statLine">Today %: <span id="dPct">0</span>%</div>
-
-  <div class="statLine">Days Completed: <span id="days">0</span></div>
-  <div class="statLine">Weeks Completed: <span id="weeks">0</span></div>
 </div>
 
 </div>
 
 <script>
 
-let days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-let selectedDay = new Date().getDay();
+let days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+let selected=new Date().getDay();
 
-/* FIXED TRACKING (IMPORTANT) */
-let state = {
-  m: [false,false,false],
-  n: [false,false,false]
+/* 🔒 LOCKED WEEKLY ROUTINE */
+const schedule = {
+  0:{type:"Recovery",night:["Cleanser","Moisturizer"]},
+  1:{type:"Acne",night:["Cleanser","Salicylic Acid 2%","Moisturizer"]},
+  2:{type:"Recovery",night:["Cleanser","Moisturizer"]},
+  3:{type:"Retinol",night:["Cleanser","Retinol","Moisturizer"]},
+  4:{type:"Recovery",night:["Cleanser","Moisturizer"]},
+  5:{type:"Mask",night:["Cleanser","Mask","Moisturizer"]},
+  6:{type:"Acne",night:["Cleanser","Salicylic Acid 2%","Moisturizer"]}
 };
 
-/* CALENDAR */
+/* MORNING IS ALWAYS FIXED */
+const morning=[
+  "Cleanser - The Ordinary",
+  "Glow Serum - Beauty of Joseon",
+  "Moisturizer - Hydro Boost",
+  "Sunscreen - Black Girl SPF"
+];
+
+/* STATE PER DAY */
+let state={};
+for(let i=0;i<7;i++){
+  state[i]={m:[],n:[]};
+}
+
+/* INIT MORNING TEMPLATE */
+function initDay(i){
+  if(state[i].m.length===0){
+    state[i.m]=morning.map(()=>false);
+  }
+  if(state[i].n.length===0){
+    state[i].n=schedule[i].night.map(()=>false);
+  }
+}
+
 function buildCalendar(){
-  let cal = document.getElementById("calendar");
-  cal.innerHTML = "";
+  let c=document.getElementById("calendar");
+  c.innerHTML="";
 
   days.forEach((d,i)=>{
-    let div = document.createElement("div");
-    div.className = "day" + (i===selectedDay ? " activeDay" : "");
-    div.innerText = d;
-    div.onclick = ()=> {
-      selectedDay = i;
-      buildCalendar();
+    let el=document.createElement("div");
+    el.className="day"+(i===selected?" activeDay":"");
+    el.innerText=d.slice(0,3);
+    el.onclick=()=>{
+      selected=i;
+      render();
     };
-    cal.appendChild(div);
+    c.appendChild(el);
   });
 }
 
-/* TOGGLE FIX (NOW CAN UNCHECK PROPERLY) */
-function toggle(el,type){
+/* BUILD LISTS */
+function buildLists(){
 
-  let index = Array.from(el.parentNode.children).indexOf(el) - 1;
+  initDay(selected);
 
-  if(type==="m"){
-    state.m[index] = !state.m[index];
-  } else {
-    state.n[index] = !state.n[index];
-  }
+  let mDiv=document.getElementById("morningList");
+  let nDiv=document.getElementById("nightList");
 
-  el.classList.toggle("done");
+  mDiv.innerHTML="";
+  nDiv.innerHTML="";
 
+  morning.forEach((item,i)=>{
+    let el=document.createElement("div");
+    el.className="item"+(state[selected].m[i]?" done":"");
+    el.innerText=item;
+    el.onclick=()=>{
+      state[selected].m[i]=!state[selected].m[i];
+      render();
+    };
+    mDiv.appendChild(el);
+  });
+
+  schedule[selected].night.forEach((item,i)=>{
+    let el=document.createElement("div");
+    el.className="item"+(state[selected].n[i]?" done":"");
+    el.innerText=item;
+    el.onclick=()=>{
+      state[selected].n[i]=!state[selected].n[i];
+      render();
+    };
+    nDiv.appendChild(el);
+  });
+
+  document.getElementById("nightType").innerText=
+    schedule[selected].type;
+}
+
+/* UPDATE PROGRESS */
+function update(){
+
+  let mDone=state[selected].m.filter(Boolean).length;
+  let nDone=state[selected].n.filter(Boolean).length;
+
+  let mPct=(mDone/morning.length)*100;
+  let nPct=(nDone/schedule[selected].night.length)*100;
+  let dPct=(mPct+nPct)/2;
+
+  document.getElementById("mBar").style.width=mPct+"%";
+  document.getElementById("nBar").style.width=nPct+"%";
+  document.getElementById("dBar").style.width=dPct+"%";
+
+  document.getElementById("mPct").innerText=Math.round(mPct)+"%";
+  document.getElementById("nPct").innerText=Math.round(nPct)+"%";
+  document.getElementById("dPct").innerText=Math.round(dPct)+"%";
+}
+
+/* MAIN RENDER */
+function render(){
+  buildCalendar();
+  buildLists();
   update();
 }
 
-/* ACCURATE CALC */
-function update(){
+document.getElementById("date").innerText=
+new Date().toDateString();
 
-  let mDone = state.m.filter(Boolean).length;
-  let nDone = state.n.filter(Boolean).length;
-
-  let mPct = (mDone/3)*100;
-  let nPct = (nDone/3)*100;
-  let dPct = (mPct+nPct)/2;
-
-  document.getElementById("mBar").style.width = mPct + "%";
-  document.getElementById("nBar").style.width = nPct + "%";
-  document.getElementById("dBar").style.width = dPct + "%";
-
-  /* STATS */
-  document.getElementById("mPct").innerText = Math.round(mPct);
-  document.getElementById("nPct").innerText = Math.round(nPct);
-  document.getElementById("dPct").innerText = Math.round(dPct);
-
-  document.getElementById("days").innerText =
-    (mPct === 100 && nPct === 100) ? 1 : 0;
-
-  document.getElementById("weeks").innerText = 0;
-}
-
-buildCalendar();
-update();
+render();
 
 </script>
 
