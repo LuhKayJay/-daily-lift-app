@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Lift</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f0f14;
+      color: white;
+      padding: 20px;
+    }
+
+    h1 { text-align: center; }
+
+    .box {
+      background: #1a1a24;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+
+    p {
+      padding: 8px;
+      background: #222;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .done {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      background: #6c5ce7;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🔥 Daily Lift</h1>
+
+<div class="box">
+  <h2>🌅 Morning Lift</h2>
+  <p onclick="toggle(this)">Cleanser</p>
+  <p onclick="toggle(this)">Glow Serum</p>
+  <p onclick="toggle(this)">Sunscreen</p>
+</div>
+
+<div class="box">
+  <h2>🌙 Night Lift</h2>
+  <p onclick="toggle(this)">Cleanser</p>
+  <p onclick="toggle(this)">Moisturizer</p>
+</div>
+
+<div class="box">
+  <button onclick="resetDay()">Reset Day</button>
+</div>
+
+<script>
+function toggle(el){
+  el.classList.toggle("done");
+}
+
+function resetDay(){
+  document.querySelectorAll("p").forEach(p => {
+    p.classList.remove("done");
+  });
+}
+</script>
+
+</body>
+</html>
