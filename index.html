@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V5.1</title>
+<title>Daily Lift V5.2</title>
 
 <style>
 body{
@@ -28,25 +28,10 @@ header{text-align:center;font-weight:600;}
   margin:6px 0 10px;
 }
 
-/* TABS (RESTORED PROPERLY) */
-.tabs{
-  display:flex;
-  margin-bottom:10px;
-}
-
-.tab{
-  flex:1;
-  text-align:center;
-  font-size:12px;
-  padding:6px;
-  opacity:0.6;
-  cursor:pointer;
-}
-
-.tab.active{
-  opacity:1;
-  border-bottom:2px solid #6c5ce7;
-}
+/* TABS */
+.tabs{display:flex;margin-bottom:10px;}
+.tab{flex:1;text-align:center;font-size:12px;padding:6px;opacity:0.6;cursor:pointer;}
+.tab.active{opacity:1;border-bottom:2px solid #6c5ce7;}
 
 /* PAGES */
 .page{display:none;}
@@ -79,7 +64,6 @@ header{text-align:center;font-weight:600;}
   padding:7px 0;
   font-size:14px;
   cursor:pointer;
-  opacity:0.9;
 }
 
 .done{
@@ -115,10 +99,10 @@ header{text-align:center;font-weight:600;}
 
 <div class="app">
 
-<header>🔥 Daily Lift V5.1</header>
+<header>🔥 Daily Lift V5.2</header>
 <div class="date" id="date"></div>
 
-<!-- TABS (RESTORED) -->
+<!-- TABS -->
 <div class="tabs">
   <div class="tab active" onclick="openTab('home',this)">🏠 Home</div>
   <div class="tab" onclick="openTab('products',this)">🧴 Products</div>
@@ -158,9 +142,9 @@ header{text-align:center;font-weight:600;}
   <div class="item">Glow Serum — Beauty of Joseon</div>
   <div class="item">Moisturizer — Neutrogena Hydro Boost</div>
   <div class="item">Sunscreen — Black Girl SPF</div>
-  <div class="item">Salicylic Acid — Acne treatment</div>
-  <div class="item">Retinol — Skin renewal</div>
-  <div class="item">Mugwort Clay Stick — Acne control</div>
+  <div class="item">Salicylic Acid</div>
+  <div class="item">Retinol</div>
+  <div class="item">Mugwort Clay Stick</div>
 </div>
 
 <!-- STATS -->
@@ -168,9 +152,11 @@ header{text-align:center;font-weight:600;}
   <h3>📊 Stats</h3>
 
   <div class="stats">
+    🌅 Morning Completed Days: <span id="mCount">0</span><br>
+    🌙 Night Completed Days: <span id="nCount">0</span><br>
+    📅 Full Completed Days: <span id="fCount">0</span><br>
     🔥 Current Streak: <span id="streak">0</span><br>
-    🏆 Best Streak: <span id="best">0</span><br>
-    📅 Total Days Completed: <span id="total">0</span>
+    🏆 Best Streak: <span id="best">0</span>
   </div>
 </div>
 
@@ -192,7 +178,7 @@ new Date().toDateString();
 let days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 let selected=new Date().getDay();
 
-/* ROUTINES */
+/* ROUTINE */
 const schedule={
   0:{type:"Recovery",night:["Cleanser","Moisturizer"]},
   1:{type:"Acne",night:["Cleanser","Salicylic Acid","Moisturizer"]},
@@ -213,25 +199,21 @@ const morning=[
 /* STATE */
 let state={};
 for(let i=0;i<7;i++){
-  state[i]={m:[],n:[],done:false};
+  state[i]={m:[],n:[]};
 }
 
-/* STREAK */
+/* STATS ENGINE (FIXED REAL-TIME) */
+let stats={
+  morningDays:0,
+  nightDays:0,
+  fullDays:0
+};
+
 let streak={
   current:0,
   best:0,
-  total:0,
-  lastDay:-1
+  last:-1
 };
-
-/* TAB SYSTEM */
-function openTab(id,el){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  el.classList.add("active");
-}
 
 /* CALENDAR */
 function buildCalendar(){
@@ -274,8 +256,8 @@ function build(){
   ).join("");
 }
 
-/* STREAK LOGIC (FIXED) */
-function updateStreak(){
+/* REAL-TIME STATS (FIXED LOGIC) */
+function updateStats(){
 
   let s=state[selected];
 
@@ -284,29 +266,47 @@ function updateStreak(){
 
   let full = mDone && nDone;
 
-  if(full && streak.lastDay !== selected){
-    streak.current++;
-    streak.total++;
+  // COUNT DAILY COMPLETIONS (REAL TIME FIX)
+  stats.morningDays = 0;
+  stats.nightDays = 0;
+  stats.fullDays = 0;
 
-    if(streak.current > streak.best){
-      streak.best = streak.current;
+  for(let i=0;i<7;i++){
+    let ms = state[i].m.every(v=>v===true);
+    let ns = state[i].n.every(v=>v===true);
+
+    if(ms) stats.morningDays++;
+    if(ns) stats.nightDays++;
+    if(ms && ns) stats.fullDays++;
+  }
+
+  // STREAK FIX (NO FLIP BUG)
+  if(full){
+    if(streak.last !== selected){
+      streak.current++;
+      streak.last = selected;
+
+      if(streak.current > streak.best){
+        streak.best = streak.current;
+      }
     }
-
-    streak.lastDay = selected;
-    state[selected].done = true;
+  } else {
+    if(streak.last !== selected){
+      streak.current = 0;
+    }
   }
 
-  if(!full && state[selected].done){
-    state[selected].done = false;
-  }
+  /* UPDATE UI */
+  document.getElementById("mCount").innerText=stats.morningDays;
+  document.getElementById("nCount").innerText=stats.nightDays;
+  document.getElementById("fCount").innerText=stats.fullDays;
 
-  if(!full && streak.lastDay !== selected){
-    streak.current = 0;
-  }
+  document.getElementById("streak").innerText=streak.current;
+  document.getElementById("best").innerText=streak.best;
 }
 
 /* PROGRESS */
-function update(){
+function updateBars(){
 
   let s=state[selected];
 
@@ -321,18 +321,14 @@ function update(){
   document.getElementById("mPct").innerText=Math.round(mPct)+"%";
   document.getElementById("nPct").innerText=Math.round(nPct)+"%";
   document.getElementById("dPct").innerText=Math.round(dPct)+"%";
-
-  document.getElementById("streak").innerText=streak.current;
-  document.getElementById("best").innerText=streak.best;
-  document.getElementById("total").innerText=streak.total;
 }
 
-/* RENDER */
+/* MAIN */
 function render(){
   buildCalendar();
   build();
-  update();
-  updateStreak();
+  updateBars();
+  updateStats();
 }
 
 render();
