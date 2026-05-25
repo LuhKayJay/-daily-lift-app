@@ -1,56 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Lift V3 Stable</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0b0b10;
+  color: white;
+}
+
+header {
+  text-align: center;
+  padding: 15px;
+  background: #141420;
+  font-weight: bold;
+}
+
+/* Screens */
+.screen {
+  display: none;
+  padding: 15px;
+  padding-bottom: 80px;
+}
+
+.active {
+  display: block;
+}
+
+/* Cards */
+.card {
+  background: #1a1a24;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+/* Routine items */
+.item {
+  background: #222;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.done {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+/* Products */
+img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+/* Bottom nav */
+.nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  background: #141420;
+}
+
+.nav button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: none;
+  color: white;
+}
+</style>
+</head>
+
+<body>
+
+<header>🔥 Daily Lift V3</header>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+
+  <div class="card">
+    <h2>🌅 Morning Lift</h2>
+    <div class="item" onclick="toggle(this)">Cleanser - The Ordinary Glucoside</div>
+    <div class="item" onclick="toggle(this)">Glow Serum - Beauty of Joseon</div>
+    <div class="item" onclick="toggle(this)">Sunscreen - Black Girl SPF 30</div>
+  </div>
+
+  <div class="card">
+    <h2>🌙 Night Lift</h2>
+    <div class="item" onclick="toggle(this)">Cleanser</div>
+    <div class="item" onclick="toggle(this)">Moisturizer - Neutrogena Hydro Boost</div>
+    <div class="item" onclick="toggle(this)">Retinol (2-3x per week)</div>
+  </div>
+
+</div>
+
+<!-- PRODUCTS -->
 <div id="products" class="screen">
 
   <div class="card">
     <h2>🧴 Products</h2>
-    <p>Tap a product card. Images are stable placeholders (we upgrade to real images next).</p>
+    <p>Stable product library (safe images + descriptions)</p>
   </div>
 
   <div class="card">
     <h3>The Ordinary Glucoside Foaming Cleanser</h3>
-    <img src="https://via.placeholder.com/400x200?text=Cleanser+The+Ordinary">
-    <p>Removes dirt, oil, and buildup while keeping your skin barrier balanced. Helps prevent breakouts and prepares skin for treatments.</p>
+    <img src="https://via.placeholder.com/400x200?text=Cleanser">
+    <p>Gently removes dirt and oil while protecting your skin barrier.</p>
   </div>
 
   <div class="card">
     <h3>Beauty of Joseon Glow Serum</h3>
     <img src="https://via.placeholder.com/400x200?text=Glow+Serum">
-    <p>Brightens skin, reduces redness, and helps improve texture and acne marks over time.</p>
+    <p>Helps brighten skin, reduce redness, and improve texture.</p>
   </div>
 
   <div class="card">
     <h3>Black Girl Sunscreen SPF 30</h3>
     <img src="https://via.placeholder.com/400x200?text=Sunscreen">
-    <p>Protects skin from UV damage, prevents dark spots, and protects results from acne treatments.</p>
+    <p>Protects against UV damage and prevents dark spots.</p>
   </div>
 
   <div class="card">
     <h3>Neutrogena Hydro Boost Water Gel</h3>
     <img src="https://via.placeholder.com/400x200?text=Moisturizer">
-    <p>Lightweight hydration that prevents dryness caused by acne treatments like retinol or salicylic acid.</p>
+    <p>Hydrates skin without clogging pores.</p>
   </div>
 
   <div class="card">
     <h3>The Ordinary Salicylic Acid 2%</h3>
     <img src="https://via.placeholder.com/400x200?text=Salicylic+Acid">
-    <p>Deep pore treatment that clears blackheads, whiteheads, and prevents new acne.</p>
+    <p>Clears pores and prevents acne formation.</p>
   </div>
 
   <div class="card">
     <h3>Pair Acne Cream</h3>
     <img src="https://via.placeholder.com/400x200?text=Acne+Cream">
-    <p>Spot treatment that reduces active pimples and inflammation quickly.</p>
+    <p>Spot treatment for active pimples.</p>
   </div>
 
   <div class="card">
     <h3>Retinol Treatment</h3>
     <img src="https://via.placeholder.com/400x200?text=Retinol">
-    <p>Improves skin texture, fades acne marks, and boosts long-term skin clarity.</p>
+    <p>Improves skin texture and reduces acne marks over time.</p>
   </div>
 
   <div class="card">
-    <h3>Mugwort Green Skin Mask</h3>
+    <h3>Mugwort Green Mask</h3>
     <img src="https://via.placeholder.com/400x200?text=Mask">
-    <p>Calms redness, soothes irritation, and supports recovery nights.</p>
+    <p>Soothes irritation and calms inflamed skin.</p>
   </div>
 
 </div>
+
+<!-- STATS -->
+<div id="stats" class="screen">
+  <div class="card">
+    <h2>📊 Stats</h2>
+    <p>Coming next: streak tracking + consistency score</p>
+  </div>
+</div>
+
+<!-- AI -->
+<div id="ai" class="screen">
+  <div class="card">
+    <h2>🧠 AI Assistant</h2>
+    <p>Coming next: “edit my routine” commands</p>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button onclick="showTab('home')">Home</button>
+  <button onclick="showTab('products')">Products</button>
+  <button onclick="showTab('stats')">Stats</button>
+  <button onclick="showTab('ai')">AI</button>
+</div>
+
+<script>
+function showTab(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  const el = document.getElementById(id);
+  if (el) el.classList.add("active");
+}
+
+function toggle(el){
+  el.classList.toggle("done");
+}
+</script>
+
+</body>
+</html>
