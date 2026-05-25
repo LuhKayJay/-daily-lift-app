@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V6</title>
+<title>Daily Lift V6.1</title>
 
 <style>
 body{
@@ -50,6 +50,10 @@ header{
   opacity:1;
   border-bottom:2px solid #6c5ce7;
 }
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
 
 /* CALENDAR */
 .calendar{
@@ -100,15 +104,20 @@ header{
   background:linear-gradient(90deg,#6c5ce7,#00d2ff);
 }
 
-/* PAGES */
-.page{display:none;}
-.page.active{display:block;}
-
 /* STATS */
 .stats{
   font-size:13px;
-  opacity:0.85;
+  opacity:0.9;
   margin-top:10px;
+}
+
+button{
+  margin:4px 4px 0 0;
+  padding:6px 8px;
+  font-size:11px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -117,18 +126,16 @@ header{
 
 <div class="app">
 
-<header>🔥 Daily Lift V6</header>
+<header>🔥 Daily Lift V6.1</header>
 <div class="date" id="date"></div>
 
-<!-- TABS -->
+<!-- TABS (AI REMOVED) -->
 <div class="tabs">
   <div class="tab active" onclick="openTab('home',this)">🏠 Home</div>
   <div class="tab" onclick="openTab('products',this)">🧴 Products</div>
   <div class="tab" onclick="openTab('stats',this)">📊 Stats</div>
-  <div class="tab" onclick="openTab('ai',this)">🧠 AI</div>
 </div>
 
-<!-- CALENDAR -->
 <div class="calendar" id="calendar"></div>
 
 <!-- HOME -->
@@ -156,13 +163,13 @@ header{
 <!-- PRODUCTS -->
 <div id="products" class="page">
   <h3>🧴 Products</h3>
-  <div class="item">The Ordinary Glucoside Cleanser</div>
+  <div class="item">The Ordinary Cleanser</div>
   <div class="item">Beauty of Joseon Glow Serum</div>
-  <div class="item">Neutrogena Hydro Boost Moisturizer</div>
+  <div class="item">Neutrogena Hydro Boost</div>
   <div class="item">Black Girl Sunscreen SPF 30</div>
-  <div class="item">The Ordinary Salicylic Acid</div>
-  <div class="item">The Ordinary Retinol</div>
-  <div class="item">Mugwort Acne Clay Stick</div>
+  <div class="item">Salicylic Acid</div>
+  <div class="item">Retinol</div>
+  <div class="item">Mugwort Clay Stick</div>
 </div>
 
 <!-- STATS -->
@@ -170,18 +177,24 @@ header{
   <h3>📊 Stats</h3>
 
   <div class="stats">
-    🌅 Morning Days Completed: <span id="mCount">0</span><br>
-    🌙 Night Days Completed: <span id="nCount">0</span><br>
-    📅 Full Days Completed: <span id="fCount">0</span><br>
-    🔥 Current Streak: <span id="streak">0</span><br>
-    🏆 Best Streak: <span id="best">0</span>
+    🌅 Morning Days: <span id="mCount">0</span><br>
+    🌙 Night Days: <span id="nCount">0</span><br>
+    📅 Full Days: <span id="fCount">0</span><br>
+    🔥 Streak: <span id="streak">0</span><br>
+    🏆 Best: <span id="best">0</span>
   </div>
-</div>
 
-<!-- AI -->
-<div id="ai" class="page">
-  <h3>🧠 AI</h3>
-  <div class="item">Coming soon</div>
+  <hr style="opacity:0.2;margin:10px 0;">
+
+  <div class="stats">
+    <b>Reset Controls</b><br>
+
+    <button onclick="resetStats('m')">Reset Morning</button>
+    <button onclick="resetStats('n')">Reset Night</button>
+    <button onclick="resetStats('f')">Reset Full</button>
+    <button onclick="resetStats('streak')">Reset Streak</button>
+    <button onclick="resetStats('all')">Reset ALL</button>
+  </div>
 </div>
 
 </div>
@@ -208,10 +221,10 @@ const schedule={
 };
 
 const morning=[
-  "Cleanser - The Ordinary",
-  "Glow Serum - Beauty of Joseon",
-  "Moisturizer - Neutrogena Hydro Boost",
-  "Sunscreen - Black Girl SPF"
+  "Cleanser",
+  "Glow Serum",
+  "Moisturizer",
+  "Sunscreen"
 ];
 
 /* STATE */
@@ -221,16 +234,10 @@ for(let i=0;i<7;i++){
 }
 
 /* STATS */
-let stats={
-  m:0,n:0,f:0
-};
+let stats={m:0,n:0,f:0};
 
 /* STREAK */
-let streak={
-  current:0,
-  best:0,
-  last:-1
-};
+let streak={current:0,best:0,last:-1};
 
 /* TABS */
 function openTab(id,el){
@@ -261,6 +268,40 @@ function toggle(type,i){
   render();
 }
 
+/* RESET SYSTEM */
+function resetStats(type){
+
+  if(type==="m"){
+    stats.m=0;
+    for(let i=0;i<7;i++) state[i].m=[];
+  }
+
+  if(type==="n"){
+    stats.n=0;
+    for(let i=0;i<7;i++) state[i].n=[];
+  }
+
+  if(type==="f"){
+    stats.f=0;
+  }
+
+  if(type==="streak"){
+    streak.current=0;
+    streak.last=-1;
+  }
+
+  if(type==="all"){
+    stats={m:0,n:0,f:0};
+    streak={current:0,best:0,last:-1};
+
+    for(let i=0;i<7;i++){
+      state[i]={m:[],n:[]};
+    }
+  }
+
+  render();
+}
+
 /* BUILD */
 function build(){
 
@@ -273,23 +314,23 @@ function build(){
 
   let night=schedule[selected].night;
 
-  document.getElementById("nightType").innerText=
-  schedule[selected].type;
-
   document.getElementById("nightList").innerHTML=
   night.map((x,i)=>
     `<div class="item ${s.n[i]?'done':''}" onclick="toggle('n',${i})">${x}</div>`
   ).join("");
+
+  document.getElementById("nightType").innerText=
+  schedule[selected].type;
 }
 
-/* STATS + STREAK */
+/* UPDATE */
 function update(){
 
-  stats.m=0; stats.n=0; stats.f=0;
+  stats={m:0,n:0,f:0};
 
   for(let i=0;i<7;i++){
-    let mDone=state[i].m.every(v=>v===true);
-    let nDone=state[i].n.every(v=>v===true);
+    let mDone=state[i].m.every(v=>v);
+    let nDone=state[i].n.every(v=>v);
 
     if(mDone) stats.m++;
     if(nDone) stats.n++;
@@ -314,19 +355,15 @@ function update(){
   document.getElementById("nCount").innerText=stats.n;
   document.getElementById("fCount").innerText=stats.f;
 
-  /* STREAK */
   let full = s.m.every(v=>v) && s.n.every(v=>v);
 
   if(full && streak.last!==selected){
     streak.current++;
+    streak.best=Math.max(streak.best,streak.current);
     streak.last=selected;
-
-    if(streak.current>streak.best){
-      streak.best=streak.current;
-    }
   }
 
-  if(!full && streak.last!==selected){
+  if(!full && streak.last===selected){
     streak.current=0;
   }
 
