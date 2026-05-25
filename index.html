@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V4.3</title>
+<title>Daily Lift V5 - Streak System</title>
 
 <style>
 body{
@@ -16,7 +16,7 @@ body{
   max-width:420px;
   margin:auto;
   padding:12px;
-  padding-bottom:90px; /* 👈 fills bottom space */
+  padding-bottom:80px;
 }
 
 header{
@@ -101,16 +101,10 @@ header{
   background:linear-gradient(90deg,#6c5ce7,#00d2ff);
 }
 
-/* STATS GRID */
-.statsGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
+/* STATS */
+.stats{
   margin-top:10px;
-}
-
-.stat{
-  font-size:12px;
+  font-size:13px;
   opacity:0.85;
 }
 </style>
@@ -120,83 +114,39 @@ header{
 
 <div class="app">
 
-<header>🔥 Daily Lift V4.3</header>
+<header>🔥 Daily Lift V5</header>
 <div class="date" id="date"></div>
-
-<!-- TABS -->
-<div class="tabs">
-  <div class="tab active" onclick="openTab('home',this)">🏠 Home</div>
-  <div class="tab" onclick="openTab('products',this)">🧴 Products</div>
-  <div class="tab" onclick="openTab('stats',this)">📊 Stats</div>
-  <div class="tab" onclick="openTab('ai',this)">🧠 AI</div>
-</div>
 
 <!-- CALENDAR -->
 <div class="calendar" id="calendar"></div>
 
-<!-- HOME -->
-<div id="home">
+<!-- MORNING -->
+<div class="section">
+  <div>🌅 Morning <span id="mPct">0%</span></div>
+  <div class="bar"><div id="mBar" class="fill"></div></div>
 
-  <!-- MORNING -->
-  <div class="section">
-    <div>🌅 Morning <span id="mPct">0%</span></div>
-    <div class="bar"><div id="mBar" class="fill"></div></div>
-
-    <div id="morningList"></div>
-  </div>
-
-  <!-- NIGHT -->
-  <div class="section">
-    <div>🌙 Night — <span id="nightType"></span> <span id="nPct">0%</span></div>
-    <div class="bar"><div id="nBar" class="fill"></div></div>
-
-    <div id="nightList"></div>
-  </div>
-
-  <!-- TODAY -->
-  <div class="section">
-    <div>📊 Today <span id="dPct">0%</span></div>
-    <div class="bar"><div id="dBar" class="fill"></div></div>
-  </div>
-
+  <div id="morningList"></div>
 </div>
 
-<!-- PRODUCTS -->
-<div id="products" style="display:none;">
-  <h3>🧴 Products</h3>
+<!-- NIGHT -->
+<div class="section">
+  <div>🌙 Night — <span id="nightType"></span> <span id="nPct">0%</span></div>
+  <div class="bar"><div id="nBar" class="fill"></div></div>
 
-  <div class="item">Cleanser — The Ordinary Glucoside Foaming Cleanser</div>
-  <div class="item">Glow Serum — Beauty of Joseon Propolis + Niacinamide</div>
-  <div class="item">Moisturizer — Neutrogena Hydro Boost Water Gel</div>
-  <div class="item">Sunscreen — Black Girl Sunscreen SPF 30</div>
-  <div class="item">Salicylic Acid — The Ordinary 2% Solution</div>
-  <div class="item">Retinol — Skin renewal treatment</div>
+  <div id="nightList"></div>
 </div>
 
-<!-- STATS -->
-<div id="stats" style="display:none;">
-
-  <h3>📊 Stats</h3>
-
-  <div class="statsGrid">
-
-    <div class="stat">🌅 Morning Days: <span id="sM">0</span></div>
-    <div class="stat">🌙 Night Days: <span id="sN">0</span></div>
-
-    <div class="stat">📅 Full Days: <span id="sD">0</span></div>
-    <div class="stat">📆 Weeks: <span id="sW">0</span></div>
-
-    <div class="stat">📊 Today: <span id="sT">0%</span></div>
-    <div class="stat">📈 Week: <span id="sWK">0%</span></div>
-
-  </div>
-
+<!-- TODAY -->
+<div class="section">
+  <div>📊 Today <span id="dPct">0%</span></div>
+  <div class="bar"><div id="dBar" class="fill"></div></div>
 </div>
 
-<!-- AI -->
-<div id="ai" style="display:none;">
-  <h3>🧠 AI</h3>
-  <div class="item">Coming next: smart skincare assistant</div>
+<!-- STREAK -->
+<div class="stats">
+🔥 Current Streak: <span id="streak">0</span><br>
+🏆 Best Streak: <span id="best">0</span><br>
+📅 Total Days Completed: <span id="total">0</span>
 </div>
 
 </div>
@@ -211,7 +161,7 @@ new Date().toDateString();
 let days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 let selected=new Date().getDay();
 
-/* LOCKED ROUTINE */
+/* ROUTINE */
 const schedule={
   0:{type:"Recovery",night:["Cleanser","Moisturizer"]},
   1:{type:"Acne",night:["Cleanser","Salicylic Acid","Moisturizer"]},
@@ -222,10 +172,11 @@ const schedule={
   6:{type:"Acne",night:["Cleanser","Salicylic Acid","Moisturizer"]}
 };
 
+/* MORNING */
 const morning=[
   "Cleanser - The Ordinary",
   "Glow Serum - Beauty of Joseon",
-  "Moisturizer - Neutrogena Hydro Boost Water Gel", /* 👈 FIXED */
+  "Moisturizer - Neutrogena Hydro Boost",
   "Sunscreen - Black Girl SPF"
 ];
 
@@ -235,16 +186,13 @@ for(let i=0;i<7;i++){
   state[i]={m:[],n:[]};
 }
 
-/* NAV */
-function openTab(id,el){
-  ["home","products","stats","ai"].forEach(x=>{
-    document.getElementById(x).style.display="none";
-  });
-  document.getElementById(id).style.display="block";
-
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  el.classList.add("active");
-}
+/* STREAK SYSTEM */
+let streakData={
+  current:0,
+  best:0,
+  total:0,
+  lastCompletedDay:-1
+};
 
 /* CALENDAR */
 function buildCalendar(){
@@ -255,7 +203,10 @@ function buildCalendar(){
     let el=document.createElement("div");
     el.className="day"+(i===selected?" active":"");
     el.innerText=d;
-    el.onclick=()=>{selected=i;render();};
+    el.onclick=()=>{
+      selected=i;
+      render();
+    };
     c.appendChild(el);
   });
 }
@@ -266,7 +217,7 @@ function toggle(type,i){
   render();
 }
 
-/* BUILD LIST */
+/* BUILD UI */
 function build(){
 
   let s=state[selected];
@@ -287,23 +238,40 @@ function build(){
   ).join("");
 }
 
-/* STATS ENGINE */
-function updateStats(){
+/* STREAK CHECK */
+function checkStreak(){
 
-  let mTotal=0,nTotal=0,fullDays=0;
+  let s=state[selected];
 
-  for(let i=0;i<7;i++){
-    let mDone=state[i].m.filter(Boolean).length;
-    let nDone=state[i].n.filter(Boolean).length;
+  let mDone=s.m.filter(Boolean).length===morning.length;
+  let nDone=s.n.filter(Boolean).length===schedule[selected].night.length;
 
-    if(mDone===morning.length) mTotal++;
-    if(nDone===schedule[i].night.length) nTotal++;
-    if(mDone===morning.length && nDone===schedule[i].night.length) fullDays++;
+  let fullDay=mDone && nDone;
+
+  if(fullDay && streakData.lastCompletedDay!==selected){
+
+    streakData.current++;
+    streakData.total++;
+
+    if(streakData.current>streakData.best){
+      streakData.best=streakData.current;
+    }
+
+    streakData.lastCompletedDay=selected;
   }
 
-  let today=state[selected];
-  let mPct=(today.m.filter(Boolean).length/morning.length)*100;
-  let nPct=(today.n.filter(Boolean).length/schedule[selected].night.length)*100;
+  if(!fullDay && streakData.lastCompletedDay!==selected){
+    streakData.current=0;
+  }
+}
+
+/* UPDATE UI */
+function update(){
+
+  let s=state[selected];
+
+  let mPct=(s.m.filter(Boolean).length/morning.length)*100;
+  let nPct=(s.n.filter(Boolean).length/schedule[selected].night.length)*100;
   let dPct=(mPct+nPct)/2;
 
   document.getElementById("mBar").style.width=mPct+"%";
@@ -314,19 +282,17 @@ function updateStats(){
   document.getElementById("nPct").innerText=Math.round(nPct)+"%";
   document.getElementById("dPct").innerText=Math.round(dPct)+"%";
 
-  document.getElementById("sM").innerText=mTotal;
-  document.getElementById("sN").innerText=nTotal;
-  document.getElementById("sD").innerText=fullDays;
-  document.getElementById("sW").innerText=Math.floor(fullDays/7);
-  document.getElementById("sT").innerText=Math.round(dPct)+"%";
-  document.getElementById("sWK").innerText=Math.round((fullDays/7)*100)+"%";
+  document.getElementById("streak").innerText=streakData.current;
+  document.getElementById("best").innerText=streakData.best;
+  document.getElementById("total").innerText=streakData.total;
 }
 
 /* MAIN */
 function render(){
   buildCalendar();
   build();
-  updateStats();
+  update();
+  checkStreak();
 }
 
 render();
