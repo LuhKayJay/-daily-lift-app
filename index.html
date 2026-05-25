@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V3.8</title>
+<title>Daily Lift V3.9</title>
 
 <style>
 body {
@@ -18,18 +18,11 @@ body {
   padding: 12px;
 }
 
-header {
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
 /* CALENDAR */
 .calendar {
   display: flex;
   justify-content: space-between;
   font-size: 11px;
-  opacity: 0.8;
   margin-bottom: 10px;
 }
 
@@ -38,28 +31,26 @@ header {
   text-align: center;
   padding: 6px;
   border-radius: 8px;
+  opacity: 0.7;
   cursor: pointer;
 }
 
 .activeDay {
   background: rgba(108,92,231,0.3);
-  color: white;
+  opacity: 1;
 }
 
-/* SECTION */
-.section {
-  margin: 10px 0;
-}
-
+/* TEXT ITEMS (NO BOXES) */
 .item {
   padding: 8px 0;
   font-size: 14px;
+  cursor: pointer;
   opacity: 0.9;
 }
 
 .done {
   text-decoration: line-through;
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 /* PROGRESS */
@@ -74,33 +65,16 @@ header {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg,#6c5ce7,#00d2ff);
+  transition: 0.2s;
 }
 
-/* NAV */
-.bottom {
-  position: fixed;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 95%;
-  max-width: 420px;
-  display: flex;
-  justify-content: space-around;
-  background: rgba(20,20,30,0.7);
-  padding: 8px;
-  border-radius: 16px;
+/* STATS */
+.statLine {
+  font-size: 14px;
+  margin: 6px 0;
+  opacity: 0.9;
 }
 
-button {
-  background: none;
-  border: none;
-  color: #aaa;
-  font-size: 11px;
-}
-
-button.activeTab {
-  color: white;
-}
 </style>
 </head>
 
@@ -108,50 +82,59 @@ button.activeTab {
 
 <div class="app">
 
-<header>🔥 Daily Lift V3.8</header>
+<header>🔥 Daily Lift V3.9</header>
 
-<div id="topInfo"></div>
-
-<!-- WEEK CALENDAR -->
+<!-- CALENDAR -->
 <div class="calendar" id="calendar"></div>
 
-<!-- PROGRESS -->
+<!-- HOME PROGRESS -->
 <div class="section">
-  <div>📊 Today Progress</div>
-  <div class="bar"><div id="todayBar" class="fill"></div></div>
+  <div>🌅 Morning</div>
+  <div class="bar"><div id="mBar" class="fill"></div></div>
+
+  <div class="item" onclick="toggle(this,'m')">Cleanser - The Ordinary</div>
+  <div class="item" onclick="toggle(this,'m')">Glow Serum - Beauty of Joseon</div>
+  <div class="item" onclick="toggle(this,'m')">Sunscreen - Black Girl SPF</div>
 </div>
 
 <div class="section">
-  <div>📈 Week Progress</div>
-  <div class="bar"><div id="weekBar" class="fill"></div></div>
+  <div>🌙 Night</div>
+  <div class="bar"><div id="nBar" class="fill"></div></div>
+
+  <div class="item" onclick="toggle(this,'n')">Cleanser</div>
+  <div class="item" onclick="toggle(this,'n')">Moisturizer - Hydro Boost</div>
+  <div class="item" onclick="toggle(this,'n')">Retinol</div>
 </div>
 
-<!-- DAY VIEW -->
 <div class="section">
-  <h4 id="dayTitle"></h4>
-
-  <div class="section">
-    <div>🌅 Morning</div>
-    <div class="item" onclick="toggle(this)">Cleanser</div>
-    <div class="item" onclick="toggle(this)">Glow Serum</div>
-    <div class="item" onclick="toggle(this)">Sunscreen</div>
-  </div>
-
-  <div class="section">
-    <div>🌙 Night</div>
-    <div class="item" onclick="toggle(this)">Cleanser</div>
-    <div class="item" onclick="toggle(this)">Moisturizer</div>
-    <div class="item" onclick="toggle(this)">Retinol</div>
-  </div>
+  <div>📊 Daily Progress</div>
+  <div class="bar"><div id="dBar" class="fill"></div></div>
 </div>
 
+<!-- PRODUCTS (RESTORED NAMES) -->
+<div class="section">
+  <h3>🧴 Products</h3>
+
+  <div class="item">Cleanser — The Ordinary Glucoside Foaming Cleanser</div>
+  <div class="item">Glow Serum — Beauty of Joseon Propolis + Niacinamide</div>
+  <div class="item">Sunscreen — Black Girl Sunscreen SPF 30</div>
+  <div class="item">Moisturizer — Neutrogena Hydro Boost Water Gel</div>
+  <div class="item">Salicylic Acid — The Ordinary 2% Solution</div>
+  <div class="item">Retinol — Night treatment for acne + texture</div>
 </div>
 
-<div class="bottom">
-  <button class="activeTab">🏠 Home</button>
-  <button>🧴 Products</button>
-  <button>📊 Stats</button>
-  <button>🧠 AI</button>
+<!-- STATS (FULL TRACKERS RESTORED) -->
+<div class="section">
+  <h3>📊 Stats</h3>
+
+  <div class="statLine">Morning %: <span id="mPct">0</span>%</div>
+  <div class="statLine">Night %: <span id="nPct">0</span>%</div>
+  <div class="statLine">Today %: <span id="dPct">0</span>%</div>
+
+  <div class="statLine">Days Completed: <span id="days">0</span></div>
+  <div class="statLine">Weeks Completed: <span id="weeks">0</span></div>
+</div>
+
 </div>
 
 <script>
@@ -159,9 +142,13 @@ button.activeTab {
 let days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 let selectedDay = new Date().getDay();
 
-let m = 0;
-let n = 0;
+/* FIXED TRACKING (IMPORTANT) */
+let state = {
+  m: [false,false,false],
+  n: [false,false,false]
+};
 
+/* CALENDAR */
 function buildCalendar(){
   let cal = document.getElementById("calendar");
   cal.innerHTML = "";
@@ -170,32 +157,57 @@ function buildCalendar(){
     let div = document.createElement("div");
     div.className = "day" + (i===selectedDay ? " activeDay" : "");
     div.innerText = d;
-    div.onclick = ()=>selectDay(i);
+    div.onclick = ()=> {
+      selectedDay = i;
+      buildCalendar();
+    };
     cal.appendChild(div);
   });
 }
 
-function selectDay(i){
-  selectedDay = i;
-  buildCalendar();
-  document.getElementById("dayTitle").innerText = "Selected: " + days[i];
-}
+/* TOGGLE FIX (NOW CAN UNCHECK PROPERLY) */
+function toggle(el,type){
 
-function toggle(el){
+  let index = Array.from(el.parentNode.children).indexOf(el) - 1;
+
+  if(type==="m"){
+    state.m[index] = !state.m[index];
+  } else {
+    state.n[index] = !state.n[index];
+  }
+
   el.classList.toggle("done");
+
   update();
 }
 
+/* ACCURATE CALC */
 function update(){
-  let todayPct = Math.min((m+n)/6*100,100);
-  let weekPct = todayPct; // simplified for now
 
-  document.getElementById("todayBar").style.width = todayPct + "%";
-  document.getElementById("weekBar").style.width = weekPct + "%";
+  let mDone = state.m.filter(Boolean).length;
+  let nDone = state.n.filter(Boolean).length;
+
+  let mPct = (mDone/3)*100;
+  let nPct = (nDone/3)*100;
+  let dPct = (mPct+nPct)/2;
+
+  document.getElementById("mBar").style.width = mPct + "%";
+  document.getElementById("nBar").style.width = nPct + "%";
+  document.getElementById("dBar").style.width = dPct + "%";
+
+  /* STATS */
+  document.getElementById("mPct").innerText = Math.round(mPct);
+  document.getElementById("nPct").innerText = Math.round(nPct);
+  document.getElementById("dPct").innerText = Math.round(dPct);
+
+  document.getElementById("days").innerText =
+    (mPct === 100 && nPct === 100) ? 1 : 0;
+
+  document.getElementById("weeks").innerText = 0;
 }
 
 buildCalendar();
-selectDay(selectedDay);
+update();
 
 </script>
 
