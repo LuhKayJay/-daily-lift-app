@@ -2,108 +2,34 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skincare Tracker</title>
+<title>Skincare Tracker Stable</title>
 
 <style>
-body{
-  margin:0;
-  font-family:system-ui;
-  background:#0b0b10;
-  color:white;
-}
+body{margin:0;font-family:system-ui;background:#0b0b10;color:white;}
+.app{max-width:420px;margin:auto;padding:12px;padding-bottom:80px;}
 
-.app{
-  max-width:420px;
-  margin:auto;
-  padding:12px;
-  padding-bottom:80px;
-}
+.date{text-align:center;font-size:14px;opacity:0.7;margin:10px 0;}
 
-/* DATE */
-.date{
-  text-align:center;
-  font-size:14px;
-  opacity:0.7;
-  margin:10px 0;
-}
+.tabs{display:flex;}
+.tab{flex:1;text-align:center;padding:6px;font-size:12px;opacity:0.6;cursor:pointer;}
+.tab.active{opacity:1;border-bottom:2px solid #6c5ce7;}
 
-/* TABS */
-.tabs{
-  display:flex;
-  margin-bottom:10px;
-}
-
-.tab{
-  flex:1;
-  text-align:center;
-  padding:6px;
-  font-size:12px;
-  opacity:0.6;
-  cursor:pointer;
-}
-
-.tab.active{
-  opacity:1;
-  border-bottom:2px solid #6c5ce7;
-}
-
-/* PAGES */
 .page{display:none;}
 .page.active{display:block;}
 
-/* CALENDAR */
-.calendar{
-  display:flex;
-  justify-content:space-between;
-  font-size:11px;
-  margin:10px 0;
-}
+.calendar{display:flex;justify-content:space-between;font-size:11px;margin:10px 0;}
+.day{flex:1;text-align:center;padding:6px;opacity:0.6;cursor:pointer;}
+.day.active{background:#222;border-radius:8px;opacity:1;}
 
-.day{
-  flex:1;
-  text-align:center;
-  padding:6px;
-  opacity:0.6;
-  cursor:pointer;
-}
+.item{padding:6px 0;cursor:pointer;}
+.done{text-decoration:line-through;opacity:0.3;}
 
-.day.active{
-  background:#222;
-  border-radius:8px;
-  opacity:1;
-}
+.bar{height:6px;background:#222;border-radius:20px;overflow:hidden;}
+.fill{height:100%;width:0%;background:#6c5ce7;}
 
-/* ITEMS */
-.item{
-  padding:6px 0;
-  cursor:pointer;
-}
+.stats{font-size:13px;opacity:0.85;}
 
-.done{
-  text-decoration:line-through;
-  opacity:0.3;
-}
-
-/* PROGRESS */
-.bar{
-  height:6px;
-  background:#222;
-  border-radius:20px;
-  overflow:hidden;
-}
-
-.fill{
-  height:100%;
-  width:0%;
-  background:#6c5ce7;
-}
-
-/* STATS */
-.stats{
-  font-size:13px;
-  opacity:0.85;
-  margin-top:10px;
-}
+button{margin:4px;padding:6px;font-size:11px;}
 </style>
 </head>
 
@@ -113,59 +39,55 @@ body{
 
 <div class="date" id="date"></div>
 
-<!-- TABS -->
 <div class="tabs">
   <div class="tab active" onclick="openTab('home',this)">Home</div>
   <div class="tab" onclick="openTab('products',this)">Products</div>
   <div class="tab" onclick="openTab('stats',this)">Stats</div>
 </div>
 
-<!-- CALENDAR -->
 <div class="calendar" id="calendar"></div>
 
 <!-- HOME -->
 <div id="home" class="page active">
 
-  <div>
-    🌅 Morning <span id="mPct">0%</span>
-    <div class="bar"><div id="mBar" class="fill"></div></div>
-    <div id="morning"></div>
-  </div>
+  🌅 Morning <span id="mPct">0%</span>
+  <div class="bar"><div id="mBar" class="fill"></div></div>
+  <div id="morning"></div>
 
-  <div style="margin-top:10px;">
-    🌙 Night — <span id="nightType"></span> <span id="nPct">0%</span>
-    <div class="bar"><div id="nBar" class="fill"></div></div>
-    <div id="night"></div>
-  </div>
+  <br>
 
-  <div style="margin-top:10px;">
-    📊 Today <span id="dPct">0%</span>
-    <div class="bar"><div id="dBar" class="fill"></div></div>
-  </div>
+  🌙 Night <span id="nPct">0%</span>
+  <div class="bar"><div id="nBar" class="fill"></div></div>
+  <div id="night"></div>
 
 </div>
 
 <!-- PRODUCTS -->
 <div id="products" class="page">
   <h3>Products</h3>
-
-  <div class="item">The Ordinary Cleanser</div>
-  <div class="item">Beauty of Joseon Glow Serum</div>
-  <div class="item">Neutrogena Hydro Boost Moisturizer</div>
-  <div class="item">Black Girl Sunscreen SPF 30</div>
-  <div class="item">Salicylic Acid</div>
-  <div class="item">Retinol</div>
-  <div class="item">Mugwort Clay Stick</div>
+  <div>The Ordinary Cleanser</div>
+  <div>Beauty of Joseon Glow Serum</div>
+  <div>Neutrogena Hydro Boost</div>
+  <div>Black Girl Sunscreen</div>
+  <div>Salicylic Acid</div>
+  <div>Retinol</div>
+  <div>Mugwort Clay Stick</div>
 </div>
 
 <!-- STATS -->
 <div id="stats" class="page">
   <h3>Stats</h3>
 
-  🌅 Morning Days Completed: <span id="mCount">0</span><br>
-  🌙 Night Days Completed: <span id="nCount">0</span><br>
-  📅 Full Days Completed: <span id="fCount">0</span><br>
-  🔥 Streak: <span id="streak">0</span>
+  🌅 Morning Days: <span id="mCount">0</span><br>
+  🌙 Night Days: <span id="nCount">0</span><br>
+  📅 Full Days: <span id="fCount">0</span><br>
+  🔥 Streak: <span id="streak">0</span><br>
+
+  <hr>
+
+  <button onclick="reset('m')">Reset Morning</button>
+  <button onclick="reset('n')">Reset Night</button>
+  <button onclick="reset('all')">Reset All</button>
 </div>
 
 </div>
@@ -173,39 +95,37 @@ body{
 <script>
 
 /* DATE */
-document.getElementById("date").innerText =
-new Date().toDateString();
+document.getElementById("date").innerText=new Date().toDateString();
 
 /* DAYS */
 let days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 let selected=new Date().getDay();
 
-/* NIGHT ROUTINES */
+/* ROUTINES */
 const schedule={
-0:{type:"Recovery",night:["Cleanser","Moisturizer"]},
-1:{type:"Acne",night:["Cleanser","Salicylic Acid","Moisturizer"]},
-2:{type:"Recovery",night:["Cleanser","Moisturizer"]},
-3:{type:"Retinol",night:["Cleanser","Retinol","Moisturizer"]},
-4:{type:"Recovery",night:["Cleanser","Moisturizer"]},
-5:{type:"Mask",night:["Cleanser","Mask","Moisturizer"]},
-6:{type:"Acne",night:["Cleanser","Salicylic Acid","Moisturizer"]}
+0:["Cleanser","Moisturizer"],
+1:["Cleanser","Salicylic Acid","Moisturizer"],
+2:["Cleanser","Moisturizer"],
+3:["Cleanser","Retinol","Moisturizer"],
+4:["Cleanser","Moisturizer"],
+5:["Cleanser","Mask","Moisturizer"],
+6:["Cleanser","Salicylic Acid","Moisturizer"]
 };
 
-const morning=[
-"Cleanser",
-"Glow Serum",
-"Moisturizer",
-"Sunscreen"
-];
+const morning=["Cleanser","Glow Serum","Moisturizer","Sunscreen"];
 
 /* STATE */
 let state={};
 for(let i=0;i<7;i++) state[i]={m:[],n:[]};
 
-let stats={m:0,n:0,f:0};
-let streak=0;
+/* STREAK SAFE STORAGE */
+let streakData={
+lastCompletedDay:-1,
+current:0,
+best:0
+};
 
-/* TABS */
+/* TAB */
 function openTab(id,el){
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
 document.getElementById(id).classList.add("active");
@@ -214,7 +134,7 @@ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
 el.classList.add("active");
 }
 
-/* CALENDAR */
+/* CALENDAR (NO LOGIC SIDE EFFECTS) */
 function buildCalendar(){
 let c=document.getElementById("calendar");
 c.innerHTML="";
@@ -228,7 +148,7 @@ c.appendChild(div);
 });
 }
 
-/* TOGGLE */
+/* TOGGLE ONLY STATE */
 function toggle(type,i){
 state[selected][type][i]=!state[selected][type][i];
 render();
@@ -244,21 +164,18 @@ morning.map((x,i)=>
 `<div class="item ${s.m[i]?'done':''}" onclick="toggle('m',${i})">${x}</div>`
 ).join("");
 
-let night=schedule[selected].night;
+let night=schedule[selected];
 
 document.getElementById("night").innerHTML=
 night.map((x,i)=>
 `<div class="item ${s.n[i]?'done':''}" onclick="toggle('n',${i})">${x}</div>`
 ).join("");
-
-document.getElementById("nightType").innerText=
-schedule[selected].type;
 }
 
-/* UPDATE */
+/* UPDATE STATS (DERIVED ONLY) */
 function update(){
 
-stats={m:0,n:0,f:0};
+let stats={m:0,n:0,f:0};
 
 for(let i=0;i<7;i++){
 let mDone=state[i].m.every(v=>v);
@@ -266,35 +183,64 @@ let nDone=state[i].n.every(v=>v);
 
 if(mDone) stats.m++;
 if(nDone) stats.n++;
-if(mDone&&nDone) stats.f++;
+if(mDone && nDone) stats.f++;
 }
 
+/* SAFE STREAK LOGIC (NO SPAM EVER) */
+let todayDone =
+state[selected].m.every(v=>v) &&
+state[selected].n.every(v=>v);
+
+if(todayDone && streakData.lastCompletedDay !== selected){
+streakData.current++;
+streakData.lastCompletedDay = selected;
+
+streakData.best=Math.max(streakData.best,streakData.current);
+}
+
+if(!todayDone && streakData.lastCompletedDay === selected){
+streakData.current=Math.max(0,streakData.current-1);
+streakData.lastCompletedDay=-1;
+}
+
+/* PERCENTAGES */
 let s=state[selected];
 
 let mPct=(s.m.filter(Boolean).length/morning.length)*100;
-let nPct=(s.n.filter(Boolean).length/schedule[selected].night.length)*100;
+let nPct=(s.n.filter(Boolean).length/schedule[selected].length)*100;
 let dPct=(mPct+nPct)/2;
 
+/* UI */
 document.getElementById("mBar").style.width=mPct+"%";
 document.getElementById("nBar").style.width=nPct+"%";
-document.getElementById("dBar").style.width=dPct+"%";
 
 document.getElementById("mPct").innerText=Math.round(mPct)+"%";
 document.getElementById("nPct").innerText=Math.round(nPct)+"%";
-document.getElementById("dPct").innerText=Math.round(dPct)+"%";
 
 document.getElementById("mCount").innerText=stats.m;
 document.getElementById("nCount").innerText=stats.n;
 document.getElementById("fCount").innerText=stats.f;
 
-/* STREAK */
-let full = s.m.every(v=>v)&&s.n.every(v=>v);
+document.getElementById("streak").innerText=streakData.current;
+}
 
-if(full && streak===0) streak=1;
-else if(full && streak>0 && selected!==0) streak++;
-else if(!full) streak=0;
+/* RESET */
+function reset(type){
 
-document.getElementById("streak").innerText=streak;
+if(type==="m"){
+for(let i=0;i<7;i++) state[i].m=[];
+}
+
+if(type==="n"){
+for(let i=0;i<7;i++) state[i].n=[];
+}
+
+if(type==="all"){
+for(let i=0;i<7;i++) state[i]={m:[],n:[]};
+streakData={lastCompletedDay:-1,current:0,best:0};
+}
+
+render();
 }
 
 /* RENDER */
