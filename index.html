@@ -2,18 +2,17 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V3.5</title>
+<title>Daily Lift V3.6</title>
 
 <style>
-
 body {
   margin: 0;
-  font-family: system-ui, Arial;
+  font-family: system-ui;
   background: radial-gradient(circle at top, #1a1a2e, #0b0b10);
   color: white;
 }
 
-/* APP WRAPPER */
+/* APP */
 .app {
   max-width: 420px;
   margin: auto;
@@ -22,45 +21,37 @@ body {
 /* HEADER */
 header {
   text-align: center;
-  padding: 18px;
+  padding: 12px;
   font-weight: bold;
-  font-size: 18px;
 }
 
-/* SCREENS */
+/* SCREEN */
 .screen {
   display: none;
-  padding: 15px;
-  padding-bottom: 110px;
+  padding: 12px;
+  padding-bottom: 90px;
 }
 
 .active {
   display: block;
 }
 
-/* GLASS CARD */
+/* CARD */
 .card {
   background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.08);
-  padding: 14px;
-  border-radius: 16px;
-  margin-bottom: 14px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  border-radius: 14px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 /* ITEM */
 .item {
   background: rgba(255,255,255,0.08);
-  padding: 12px;
-  margin-top: 8px;
+  padding: 8px;
+  margin-top: 6px;
   border-radius: 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.item:active {
-  transform: scale(0.98);
+  font-size: 13px;
 }
 
 .done {
@@ -68,12 +59,12 @@ header {
   text-decoration: line-through;
 }
 
-/* PROGRESS */
+/* SMALL PROGRESS BAR */
 .bar {
   width: 100%;
-  height: 10px;
+  height: 6px;
   background: rgba(255,255,255,0.1);
-  border-radius: 20px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -81,59 +72,60 @@ header {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, #6c5ce7, #00d2ff);
-  transition: 0.4s ease;
+  transition: 0.3s;
 }
 
-/* PRODUCT IMAGE */
-img {
-  width: 100%;
-  height: 170px;
-  object-fit: cover;
-  border-radius: 12px;
+/* STATS CIRCLE */
+.circleWrap {
+  display: flex;
+  justify-content: center;
   margin-top: 10px;
 }
 
-/* BOTTOM NAV */
+.circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(#6c5ce7 0%, rgba(255,255,255,0.1) 0%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* NAV */
 .nav {
   position: fixed;
-  bottom: 12px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   width: 95%;
   max-width: 420px;
   display: flex;
   background: rgba(20,20,30,0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px;
+  border-radius: 16px;
   padding: 6px;
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
-/* NAV BUTTON */
 .nav button {
   flex: 1;
-  border: none;
   background: none;
+  border: none;
   color: #aaa;
   font-size: 11px;
-  padding: 10px 0;
-  border-radius: 14px;
-  transition: 0.2s;
 }
 
-/* ACTIVE TAB */
 .nav button.activeTab {
-  background: rgba(108,92,231,0.25);
   color: white;
+  background: rgba(108,92,231,0.2);
+  border-radius: 12px;
 }
 
-/* TAB ICON */
 .tabIcon {
   display: block;
-  font-size: 18px;
-  margin-bottom: 2px;
+  font-size: 16px;
 }
-
 </style>
 </head>
 
@@ -141,7 +133,7 @@ img {
 
 <div class="app">
 
-<header>🔥 Daily Lift V3.5</header>
+<header>🔥 Daily Lift V3.6</header>
 
 <!-- HOME -->
 <div id="home" class="screen active">
@@ -149,33 +141,32 @@ img {
   <div class="card">
     <h3>📅 Today</h3>
     <p id="date"></p>
-    <p id="todayLabel"></p>
   </div>
 
   <div class="card">
-    <h3>🌅 Morning Progress</h3>
-    <div class="bar"><div id="morningBar" class="fill"></div></div>
+    <h4>🌅 Morning</h4>
+    <div class="bar"><div id="mBar" class="fill"></div></div>
   </div>
 
   <div class="card">
-    <h3>🌙 Night Progress</h3>
-    <div class="bar"><div id="nightBar" class="fill"></div></div>
+    <h4>🌙 Night</h4>
+    <div class="bar"><div id="nBar" class="fill"></div></div>
   </div>
 
   <div class="card">
-    <h3>📊 Daily Progress</h3>
-    <div class="bar"><div id="weekBar" class="fill"></div></div>
+    <h4>📊 Daily</h4>
+    <div class="bar"><div id="dBar" class="fill"></div></div>
   </div>
 
   <div class="card">
-    <h3>🌅 Morning Lift</h3>
+    <h4>🌅 Morning Lift</h4>
     <div class="item" onclick="toggle(this,'m')">Cleanser</div>
     <div class="item" onclick="toggle(this,'m')">Glow Serum</div>
     <div class="item" onclick="toggle(this,'m')">Sunscreen</div>
   </div>
 
   <div class="card">
-    <h3>🌙 Night Lift</h3>
+    <h4>🌙 Night Lift</h4>
     <div class="item" onclick="toggle(this,'n')">Cleanser</div>
     <div class="item" onclick="toggle(this,'n')">Moisturizer</div>
     <div class="item" onclick="toggle(this,'n')">Retinol</div>
@@ -188,21 +179,37 @@ img {
 
   <div class="card">
     <h2>🧴 Products</h2>
+    <p>Information-based skincare system</p>
   </div>
 
   <div class="card">
-    <h3>Cleanser</h3>
-    <img src="https://via.placeholder.com/600x300?text=Cleanser">
+    <h4>Cleanser (The Ordinary)</h4>
+    <p>Removes dirt + oil while protecting skin barrier.</p>
   </div>
 
   <div class="card">
-    <h3>Glow Serum</h3>
-    <img src="https://via.placeholder.com/600x300?text=Glow+Serum">
+    <h4>Glow Serum (Beauty of Joseon)</h4>
+    <p>Helps brighten skin, reduce redness, improve texture.</p>
   </div>
 
   <div class="card">
-    <h3>Sunscreen</h3>
-    <img src="https://via.placeholder.com/600x300?text=Sunscreen">
+    <h4>Sunscreen (Black Girl SPF 30)</h4>
+    <p>Protects against UV damage + prevents dark spots.</p>
+  </div>
+
+  <div class="card">
+    <h4>Moisturizer (Hydro Boost)</h4>
+    <p>Light hydration that doesn’t clog pores.</p>
+  </div>
+
+  <div class="card">
+    <h4>Salicylic Acid 2%</h4>
+    <p>Clears pores and prevents acne formation.</p>
+  </div>
+
+  <div class="card">
+    <h4>Retinol</h4>
+    <p>Improves texture + fades acne marks over time.</p>
   </div>
 
 </div>
@@ -211,12 +218,13 @@ img {
 <div id="stats" class="screen">
 
   <div class="card">
-    <h2>📊 Stats</h2>
-    <p>Morning Done: <span id="mCount">0</span></p>
-    <p>Night Done: <span id="nCount">0</span></p>
-    <p>Streak: <span id="streak">0</span></p>
+    <h2>📊 Weekly Tracker</h2>
 
-    <button onclick="resetAll()">Reset Progress</button>
+    <div class="circleWrap">
+      <div id="circle" class="circle">0%</div>
+    </div>
+
+    <p style="text-align:center;margin-top:10px;">Overall Completion</p>
   </div>
 
 </div>
@@ -225,7 +233,7 @@ img {
 <div id="ai" class="screen">
   <div class="card">
     <h2>🧠 AI</h2>
-    <p>Coming next: smart routine engine</p>
+    <p>Coming next: smart routine adjustments</p>
   </div>
 </div>
 
@@ -233,71 +241,53 @@ img {
 
 <!-- NAV -->
 <div class="nav">
-  <button onclick="showTab('home',this)">
-    <span class="tabIcon">🏠</span>Home
-  </button>
-  <button onclick="showTab('products',this)">
-    <span class="tabIcon">🧴</span>Products
-  </button>
-  <button onclick="showTab('stats',this)">
-    <span class="tabIcon">📊</span>Stats
-  </button>
-  <button onclick="showTab('ai',this)">
-    <span class="tabIcon">🧠</span>AI
-  </button>
+  <button onclick="show('home',this)">🏠<br>Home</button>
+  <button onclick="show('products',this)">🧴<br>Products</button>
+  <button onclick="show('stats',this)">📊<br>Stats</button>
+  <button onclick="show('ai',this)">🧠<br>AI</button>
 </div>
 
 <script>
 
-let mDone = 0;
-let nDone = 0;
-let streak = 0;
-
-let today = new Date();
-let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-
-document.getElementById("date").innerText = today.toDateString();
-document.getElementById("todayLabel").innerText =
-  "Today is " + days[today.getDay()] + " — stay consistent";
+let m = 0;
+let n = 0;
 
 function toggle(el,type){
   el.classList.toggle("done");
 
-  if(type === "m") mDone++;
-  if(type === "n") nDone++;
+  if(type === "m") m++;
+  if(type === "n") n++;
 
-  document.getElementById("mCount").innerText = mDone;
-  document.getElementById("nCount").innerText = nDone;
-
-  updateBars();
+  update();
 }
 
-function updateBars(){
+function update(){
 
-  let morning = Math.min((mDone/3)*100,100);
-  let night = Math.min((nDone/3)*100,100);
+  let mPct = Math.min((m/3)*100,100);
+  let nPct = Math.min((n/3)*100,100);
+  let dPct = (mPct + nPct)/2;
 
-  document.getElementById("morningBar").style.width = morning + "%";
-  document.getElementById("nightBar").style.width = night + "%";
+  document.getElementById("mBar").style.width = mPct + "%";
+  document.getElementById("nBar").style.width = nPct + "%";
+  document.getElementById("dBar").style.width = dPct + "%";
 
-  document.getElementById("weekBar").style.width = ((morning + night)/2) + "%";
+  document.getElementById("circle").style.background =
+    `conic-gradient(#6c5ce7 ${dPct}%, rgba(255,255,255,0.1) ${dPct}%)`;
+
+  document.getElementById("circle").innerText =
+    Math.round(dPct) + "%";
 }
 
-function resetAll(){
-  mDone = 0;
-  nDone = 0;
-  document.getElementById("mCount").innerText = 0;
-  document.getElementById("nCount").innerText = 0;
-  updateBars();
-}
-
-function showTab(id,btn){
+function show(id,btn){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 
   document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("activeTab"));
   btn.classList.add("activeTab");
 }
+
+document.getElementById("date").innerText =
+  new Date().toDateString();
 
 </script>
 
