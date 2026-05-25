@@ -12,14 +12,14 @@ body{
   color:white;
 }
 
+/* APP WRAPPER */
 .app{
   max-width:420px;
   margin:auto;
   padding:12px;
-  padding-bottom:90px;
 }
 
-/* TOP DATE */
+/* DATE */
 .date{
   text-align:center;
   opacity:0.7;
@@ -29,19 +29,16 @@ body{
 /* TABS */
 .tabs{
   display:flex;
-  position:sticky;
-  top:0;
   background:#0b0b10;
-  z-index:10;
+  border-bottom:1px solid #222;
 }
 
 .tab{
   flex:1;
   text-align:center;
-  padding:8px;
-  font-size:12px;
-  opacity:0.6;
+  padding:10px;
   cursor:pointer;
+  opacity:0.5;
 }
 
 .tab.active{
@@ -49,12 +46,22 @@ body{
   border-bottom:2px solid #6c5ce7;
 }
 
+/* PAGES — THIS FIXES YOUR MAIN BUG */
+.page{
+  display:none;
+  padding-top:10px;
+}
+
+.page.active{
+  display:block;
+}
+
 /* CALENDAR */
 .calendar{
   display:flex;
   justify-content:space-between;
   font-size:11px;
-  margin:12px 0;
+  margin:10px 0;
 }
 
 .day{
@@ -82,7 +89,7 @@ body{
   opacity:0.3;
 }
 
-/* BARS */
+/* BAR */
 .bar{
   height:6px;
   background:#222;
@@ -169,13 +176,13 @@ button{
 <script>
 
 /* DATE */
-document.getElementById("date").innerText = new Date().toDateString();
+document.getElementById("date").innerText=new Date().toDateString();
 
 /* DAYS */
 let days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 let selected=new Date().getDay();
 
-/* WEEK FUNCTION */
+/* WEEK */
 function getWeekNumber(){
   let now=new Date();
   let start=new Date(now.getFullYear(),0,1);
@@ -183,56 +190,71 @@ function getWeekNumber(){
 }
 
 /* SATURDAY ROTATION */
-function getSaturdayRoutine(){
+function saturdayRoutine(){
   let week=getWeekNumber();
   let type=(week%2===0)?"Acne":"Recovery";
 
+  return type==="Acne"
+  ?[
+    "The Ordinary Glucoside Foaming Cleanser",
+    "The Ordinary Salicylic Acid 2%",
+    "The Ordinary Natural Moisturizing Factors + Beta-glucan"
+  ]
+  :[
+    "The Ordinary Glucoside Foaming Cleanser",
+    "The Ordinary Natural Moisturizing Factors + Beta-glucan"
+  ];
+}
+
+/* NIGHT ROUTINE */
+function getNight(day){
+  const sat=saturdayRoutine();
+
   return {
-    type,
-    routine:(type==="Acne")?
-    [
+    0:[
+      "The Ordinary Glucoside Foaming Cleanser",
+      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
+    ],
+    1:[
       "The Ordinary Glucoside Foaming Cleanser",
       "The Ordinary Salicylic Acid 2%",
       "The Ordinary Natural Moisturizing Factors + Beta-glucan"
-    ]:
-    [
+    ],
+    2:[
       "The Ordinary Glucoside Foaming Cleanser",
       "The Ordinary Natural Moisturizing Factors + Beta-glucan"
-    ]
-  };
-}
-
-/* WEEKLY NIGHT SCHEDULE */
-function getNightSchedule(day){
-  let sat=getSaturdayRoutine();
-
-  const base={
-    0:["Cleanser","Moisturizer"],
-    1:["Cleanser","Salicylic Acid 2%","Moisturizer"],
-    2:["Cleanser","Moisturizer"],
-    3:["Cleanser","Retinol (Generic)","Moisturizer"],
-    4:["Cleanser","Moisturizer"],
-    5:["Cleanser","Mugwort Clay Stick","Moisturizer"],
-    6:sat.routine
-  };
-
-  return base[day];
+    ],
+    3:[
+      "The Ordinary Glucoside Foaming Cleanser",
+      "Retinol (Generic)",
+      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
+    ],
+    4:[
+      "The Ordinary Glucoside Foaming Cleanser",
+      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
+    ],
+    5:[
+      "The Ordinary Glucoside Foaming Cleanser",
+      "Mugwort Acne Clay Stick",
+      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
+    ],
+    6:sat
+  }[day];
 }
 
 /* STATE */
 let state={};
 for(let i=0;i<7;i++) state[i]={m:[],n:[],done:false};
 
-/* STREAK */
 let streak=0;
 
-/* TAB */
+/* TAB SWITCH (FIXED) */
 function openTab(id,el){
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-el.classList.add("active");
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
 }
 
 /* CALENDAR */
@@ -254,8 +276,7 @@ function toggle(type,i){
 
 state[selected][type][i]=!state[selected][type][i];
 
-/* CHECK FULL COMPLETION */
-let night=getNightSchedule(selected);
+let night=getNight(selected);
 
 let full =
 state[selected].m.every(v=>v) &&
@@ -274,24 +295,25 @@ streak=Math.max(0,streak-1);
 render();
 }
 
-/* BUILD UI */
+/* BUILD */
 function build(){
 
 let s=state[selected];
-let night=getNightSchedule(selected);
+let night=getNight(selected);
 
-/* MORNING */
-document.getElementById("morning").innerHTML=
-[
+/* MORNING (FIXED — NO PLACEHOLDERS) */
+let morning=[
 "The Ordinary Glucoside Foaming Cleanser",
 "Beauty of Joseon Glow Serum (Propolis + Niacinamide)",
 "Neutrogena Hydro Boost Water Gel",
 "Black Girl Sunscreen SPF 30"
-].map((x,i)=>
+];
+
+document.getElementById("morning").innerHTML=
+morning.map((x,i)=>
 `<div class="item ${s.m[i]?'done':''}" onclick="toggle('m',${i})">${x}</div>`
 ).join("");
 
-/* NIGHT */
 document.getElementById("night").innerHTML=
 night.map((x,i)=>
 `<div class="item ${s.n[i]?'done':''}" onclick="toggle('n',${i})">${x}</div>`
@@ -312,9 +334,8 @@ if(nDone) stats.n++;
 if(mDone&&nDone) stats.f++;
 }
 
-/* PERCENT */
 let s=state[selected];
-let night=getNightSchedule(selected);
+let night=getNight(selected);
 
 let mPct=(s.m.filter(Boolean).length/4)*100;
 let nPct=(s.n.filter(Boolean).length/night.length)*100;
