@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V4.2</title>
+<title>Daily Lift V4.3</title>
 
 <style>
 body{
@@ -16,9 +16,9 @@ body{
   max-width:420px;
   margin:auto;
   padding:12px;
+  padding-bottom:90px; /* 👈 fills bottom space */
 }
 
-/* HEADER */
 header{
   text-align:center;
   font-weight:600;
@@ -31,10 +31,9 @@ header{
   margin:6px 0 10px;
 }
 
-/* TABS (RESTORED FIXED) */
+/* TABS */
 .tabs{
   display:flex;
-  justify-content:space-between;
   margin-bottom:10px;
 }
 
@@ -70,15 +69,11 @@ header{
 
 .day.active{
   background:rgba(108,92,231,0.3);
-  opacity:1;
   border-radius:8px;
+  opacity:1;
 }
 
-/* SECTIONS */
-.section{
-  margin:12px 0;
-}
-
+/* ITEMS */
 .item{
   padding:7px 0;
   font-size:14px;
@@ -106,15 +101,18 @@ header{
   background:linear-gradient(90deg,#6c5ce7,#00d2ff);
 }
 
-.pct{
-  font-size:12px;
-  opacity:0.7;
+/* STATS GRID */
+.statsGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:10px;
 }
 
-/* PAGES */
-.page{display:none;}
-.page.active{display:block;}
-
+.stat{
+  font-size:12px;
+  opacity:0.85;
+}
 </style>
 </head>
 
@@ -122,10 +120,10 @@ header{
 
 <div class="app">
 
-<header>🔥 Daily Lift V4.2</header>
+<header>🔥 Daily Lift V4.3</header>
 <div class="date" id="date"></div>
 
-<!-- TABS (FIXED) -->
+<!-- TABS -->
 <div class="tabs">
   <div class="tab active" onclick="openTab('home',this)">🏠 Home</div>
   <div class="tab" onclick="openTab('products',this)">🧴 Products</div>
@@ -137,67 +135,79 @@ header{
 <div class="calendar" id="calendar"></div>
 
 <!-- HOME -->
-<div id="home" class="page active">
+<div id="home">
 
+  <!-- MORNING -->
   <div class="section">
-    <div>🌅 Morning <span class="pct" id="mPct">0%</span></div>
+    <div>🌅 Morning <span id="mPct">0%</span></div>
     <div class="bar"><div id="mBar" class="fill"></div></div>
+
     <div id="morningList"></div>
   </div>
 
+  <!-- NIGHT -->
   <div class="section">
-    <div>🌙 Night — <span id="nightType"></span> <span class="pct" id="nPct">0%</span></div>
+    <div>🌙 Night — <span id="nightType"></span> <span id="nPct">0%</span></div>
     <div class="bar"><div id="nBar" class="fill"></div></div>
+
     <div id="nightList"></div>
   </div>
 
+  <!-- TODAY -->
   <div class="section">
-    <div>📊 Today <span class="pct" id="dPct">0%</span></div>
+    <div>📊 Today <span id="dPct">0%</span></div>
     <div class="bar"><div id="dBar" class="fill"></div></div>
   </div>
 
 </div>
 
 <!-- PRODUCTS -->
-<div id="products" class="page">
-  <div class="section">
-    <h3>🧴 Products</h3>
-    <div class="item">Cleanser — The Ordinary</div>
-    <div class="item">Glow Serum — Beauty of Joseon</div>
-    <div class="item">Sunscreen — Black Girl SPF</div>
-    <div class="item">Moisturizer — Hydro Boost</div>
-    <div class="item">Salicylic Acid — Acne treatment</div>
-    <div class="item">Retinol — Skin renewal</div>
-  </div>
+<div id="products" style="display:none;">
+  <h3>🧴 Products</h3>
+
+  <div class="item">Cleanser — The Ordinary Glucoside Foaming Cleanser</div>
+  <div class="item">Glow Serum — Beauty of Joseon Propolis + Niacinamide</div>
+  <div class="item">Moisturizer — Neutrogena Hydro Boost Water Gel</div>
+  <div class="item">Sunscreen — Black Girl Sunscreen SPF 30</div>
+  <div class="item">Salicylic Acid — The Ordinary 2% Solution</div>
+  <div class="item">Retinol — Skin renewal treatment</div>
 </div>
 
 <!-- STATS -->
-<div id="stats" class="page">
-  <div class="section">
-    <h3>📊 Stats</h3>
-    <div class="item">Morning %: <span id="sM">0</span>%</div>
-    <div class="item">Night %: <span id="sN">0</span>%</div>
-    <div class="item">Today %: <span id="sT">0</span>%</div>
+<div id="stats" style="display:none;">
+
+  <h3>📊 Stats</h3>
+
+  <div class="statsGrid">
+
+    <div class="stat">🌅 Morning Days: <span id="sM">0</span></div>
+    <div class="stat">🌙 Night Days: <span id="sN">0</span></div>
+
+    <div class="stat">📅 Full Days: <span id="sD">0</span></div>
+    <div class="stat">📆 Weeks: <span id="sW">0</span></div>
+
+    <div class="stat">📊 Today: <span id="sT">0%</span></div>
+    <div class="stat">📈 Week: <span id="sWK">0%</span></div>
+
   </div>
+
 </div>
 
 <!-- AI -->
-<div id="ai" class="page">
-  <div class="section">
-    <h3>🧠 AI</h3>
-    <div class="item">Coming soon: smart routine assistant</div>
-  </div>
+<div id="ai" style="display:none;">
+  <h3>🧠 AI</h3>
+  <div class="item">Coming next: smart skincare assistant</div>
 </div>
 
 </div>
 
 <script>
 
-/* ===== DATE ALWAYS PRESENT ===== */
+/* DATE */
 document.getElementById("date").innerText =
 new Date().toDateString();
 
-/* ===== CORE STATE ===== */
+/* DAYS */
 let days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 let selected=new Date().getDay();
 
@@ -213,51 +223,50 @@ const schedule={
 };
 
 const morning=[
-  "Cleanser",
-  "Glow Serum",
-  "Moisturizer",
-  "Sunscreen"
+  "Cleanser - The Ordinary",
+  "Glow Serum - Beauty of Joseon",
+  "Moisturizer - Neutrogena Hydro Boost Water Gel", /* 👈 FIXED */
+  "Sunscreen - Black Girl SPF"
 ];
 
-/* STATE PER DAY */
+/* STATE */
 let state={};
 for(let i=0;i<7;i++){
   state[i]={m:[],n:[]};
 }
 
-/* ===== TAB SYSTEM FIXED ===== */
+/* NAV */
 function openTab(id,el){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+  ["home","products","stats","ai"].forEach(x=>{
+    document.getElementById(x).style.display="none";
+  });
+  document.getElementById(id).style.display="block";
 
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   el.classList.add("active");
 }
 
-/* ===== CALENDAR (WORKING) ===== */
+/* CALENDAR */
 function buildCalendar(){
   let c=document.getElementById("calendar");
   c.innerHTML="";
 
   days.forEach((d,i)=>{
-    let div=document.createElement("div");
-    div.className="day"+(i===selected?" active":"");
-    div.innerText=d;
-    div.onclick=()=>{
-      selected=i;
-      render();
-    };
-    c.appendChild(div);
+    let el=document.createElement("div");
+    el.className="day"+(i===selected?" active":"");
+    el.innerText=d;
+    el.onclick=()=>{selected=i;render();};
+    c.appendChild(el);
   });
 }
 
-/* ===== TOGGLE ===== */
+/* TOGGLE */
 function toggle(type,i){
   state[selected][type][i]=!state[selected][type][i];
   render();
 }
 
-/* ===== BUILD LISTS ===== */
+/* BUILD LIST */
 function build(){
 
   let s=state[selected];
@@ -278,13 +287,23 @@ function build(){
   ).join("");
 }
 
-/* ===== UPDATE PROGRESS ===== */
-function update(){
+/* STATS ENGINE */
+function updateStats(){
 
-  let s=state[selected];
+  let mTotal=0,nTotal=0,fullDays=0;
 
-  let mPct=(s.m.filter(Boolean).length/morning.length)*100;
-  let nPct=(s.n.filter(Boolean).length/schedule[selected].night.length)*100;
+  for(let i=0;i<7;i++){
+    let mDone=state[i].m.filter(Boolean).length;
+    let nDone=state[i].n.filter(Boolean).length;
+
+    if(mDone===morning.length) mTotal++;
+    if(nDone===schedule[i].night.length) nTotal++;
+    if(mDone===morning.length && nDone===schedule[i].night.length) fullDays++;
+  }
+
+  let today=state[selected];
+  let mPct=(today.m.filter(Boolean).length/morning.length)*100;
+  let nPct=(today.n.filter(Boolean).length/schedule[selected].night.length)*100;
   let dPct=(mPct+nPct)/2;
 
   document.getElementById("mBar").style.width=mPct+"%";
@@ -295,16 +314,19 @@ function update(){
   document.getElementById("nPct").innerText=Math.round(nPct)+"%";
   document.getElementById("dPct").innerText=Math.round(dPct)+"%";
 
-  document.getElementById("sM").innerText=Math.round(mPct);
-  document.getElementById("sN").innerText=Math.round(nPct);
-  document.getElementById("sT").innerText=Math.round(dPct);
+  document.getElementById("sM").innerText=mTotal;
+  document.getElementById("sN").innerText=nTotal;
+  document.getElementById("sD").innerText=fullDays;
+  document.getElementById("sW").innerText=Math.floor(fullDays/7);
+  document.getElementById("sT").innerText=Math.round(dPct)+"%";
+  document.getElementById("sWK").innerText=Math.round((fullDays/7)*100)+"%";
 }
 
-/* ===== MAIN ===== */
+/* MAIN */
 function render(){
   buildCalendar();
   build();
-  update();
+  updateStats();
 }
 
 render();
