@@ -2,193 +2,117 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V2</title>
+<title>Daily Lift V3</title>
 
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background: #0b0b10;
   color: white;
 }
 
+/* TOP AREA */
 header {
-  padding: 18px;
   text-align: center;
-  font-size: 22px;
+  padding: 15px;
+  background: #141420;
   font-weight: bold;
+}
+
+/* SCREEN */
+.screen {
+  display: none;
+  padding: 15px;
+}
+
+.active {
+  display: block;
+}
+
+/* CARD STYLE */
+.card {
+  background: #1a1a24;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+/* BOTTOM NAV */
+.nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
   background: #141420;
 }
 
-.container {
-  padding: 15px;
+.nav button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: none;
+  color: white;
 }
 
-.card {
-  background: #1a1a24;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
-}
-
-h2 {
-  margin-top: 0;
-}
-
+/* ITEMS */
 .item {
   background: #222;
   padding: 10px;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-
-.item input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 14px;
-  outline: none;
+  margin-top: 8px;
+  border-radius: 8px;
 }
 
 img {
   width: 100%;
-  height: 140px;
+  height: 130px;
   object-fit: cover;
   border-radius: 10px;
   margin-top: 8px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  border: none;
-  border-radius: 8px;
-  background: #6c5ce7;
-  color: white;
-  font-weight: bold;
-}
-
-.small {
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-.streak {
-  font-size: 18px;
-  text-align: center;
-  margin-bottom: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<header>🔥 Daily Lift V2</header>
+<header>🔥 Daily Lift V3</header>
 
-<div class="container">
+<!-- SCREENS -->
+<div id="home" class="screen active">
+  <div class="card">
+    🌅 Morning Lift
+  </div>
 
-<div class="card">
-  <div class="streak">🔥 Streak: <span id="streak">0</span></div>
-  <button onclick="completeDay()">Mark Today Complete</button>
+  <div class="card">
+    🌙 Night Lift
+  </div>
 </div>
 
-<div class="card">
-<h2>🌅 Morning Lift</h2>
-
-<div class="item">
-<input id="m1t" value="Cleanser - The Ordinary Glucoside">
-<input id="m1i" value="https://via.placeholder.com/400x140?text=Cleanser">
-<img id="img1">
+<div id="products" class="screen">
+  <div class="card">🧴 Products</div>
 </div>
 
-<div class="item">
-<input id="m2t" value="Glow Serum - Beauty of Joseon">
-<input id="m2i" value="https://via.placeholder.com/400x140?text=Serum">
-<img id="img2">
+<div id="ai" class="screen">
+  <div class="card">🧠 AI Assistant (coming next)</div>
 </div>
 
-<div class="item">
-<input id="m3t" value="Sunscreen - Black Girl SPF 30">
-<input id="m3i" value="https://via.placeholder.com/400x140?text=Sunscreen">
-<img id="img3">
+<div id="stats" class="screen">
+  <div class="card">📊 Streaks (coming next)</div>
 </div>
 
-</div>
-
-<div class="card">
-<h2>🌙 Night Lift</h2>
-
-<div class="item">
-<input id="n1t" value="Cleanser">
-<input id="n1i" value="https://via.placeholder.com/400x140?text=Cleanser">
-<img id="img4">
-</div>
-
-<div class="item">
-<input id="n2t" value="Moisturizer - Hydro Boost">
-<input id="n2i" value="https://via.placeholder.com/400x140?text=Moisturizer">
-<img id="img5">
-</div>
-
-</div>
-
-<div class="card">
-<button onclick="save()">💾 Save Changes</button>
-<div class="small">Everything saves automatically on your device</div>
-</div>
-
+<!-- NAV -->
+<div class="nav">
+  <button onclick="show('home')">Home</button>
+  <button onclick="show('products')">Products</button>
+  <button onclick="show('ai')">AI</button>
+  <button onclick="show('stats')">Stats</button>
 </div>
 
 <script>
-let streak = localStorage.getItem("streak") || 0;
-document.getElementById("streak").innerText = streak;
-
-function completeDay(){
-  streak++;
-  localStorage.setItem("streak", streak);
-  document.getElementById("streak").innerText = streak;
+function show(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
-
-function save(){
-  let data = {
-    m1t: m1t.value, m1i: m1i.value,
-    m2t: m2t.value, m2i: m2i.value,
-    m3t: m3t.value, m3i: m3i.value,
-    n1t: n1t.value, n1i: n1i.value,
-    n2t: n2t.value, n2i: n2i.value
-  };
-
-  localStorage.setItem("dailyLiftV2", JSON.stringify(data));
-  applyImages();
-  alert("Saved ✔️");
-}
-
-function load(){
-  let data = JSON.parse(localStorage.getItem("dailyLiftV2"));
-  if(!data) return;
-
-  Object.keys(data).forEach(k=>{
-    if(document.getElementById(k)){
-      document.getElementById(k).value = data[k];
-    }
-  });
-
-  applyImages();
-}
-
-function applyImages(){
-  img1.src = m1i.value;
-  img2.src = m2i.value;
-  img3.src = m3i.value;
-  img4.src = n1i.value;
-  img5.src = n2i.value;
-}
-
-load();
-applyImages();
 </script>
 
 </body>
