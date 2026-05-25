@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V3 Stable</title>
+<title>Daily Lift V3.3</title>
 
 <style>
 body {
@@ -23,7 +23,7 @@ header {
 .screen {
   display: none;
   padding: 15px;
-  padding-bottom: 80px;
+  padding-bottom: 90px;
 }
 
 .active {
@@ -38,7 +38,7 @@ header {
   margin-bottom: 12px;
 }
 
-/* Routine items */
+/* Items */
 .item {
   background: #222;
   padding: 10px;
@@ -52,7 +52,7 @@ header {
   text-decoration: line-through;
 }
 
-/* Products */
+/* PRODUCTS */
 img {
   width: 100%;
   height: 160px;
@@ -61,139 +61,167 @@ img {
   margin-top: 8px;
 }
 
-/* Bottom nav */
+/* STATS */
+.stat {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+/* NAV BAR */
 .nav {
   position: fixed;
   bottom: 0;
   width: 100%;
   display: flex;
   background: #141420;
+  border-top: 1px solid #2a2a3a;
 }
 
 .nav button {
   flex: 1;
-  padding: 12px;
+  padding: 10px 0;
   border: none;
   background: none;
+  color: #aaa;
+  font-size: 12px;
+}
+
+/* ACTIVE TAB */
+.nav button.activeTab {
   color: white;
+  border-top: 3px solid #6c5ce7;
+  background: rgba(108,92,231,0.1);
+}
+
+/* TAB ICON */
+.tabIcon {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 2px;
 }
 </style>
 </head>
 
 <body>
 
-<header>🔥 Daily Lift V3</header>
+<header>🔥 Daily Lift V3.3</header>
 
 <!-- HOME -->
 <div id="home" class="screen active">
 
   <div class="card">
     <h2>🌅 Morning Lift</h2>
-    <div class="item" onclick="toggle(this)">Cleanser - The Ordinary Glucoside</div>
+    <div class="item" onclick="toggle(this)">Cleanser - The Ordinary</div>
     <div class="item" onclick="toggle(this)">Glow Serum - Beauty of Joseon</div>
-    <div class="item" onclick="toggle(this)">Sunscreen - Black Girl SPF 30</div>
+    <div class="item" onclick="toggle(this)">Sunscreen - Black Girl SPF</div>
   </div>
 
   <div class="card">
     <h2>🌙 Night Lift</h2>
     <div class="item" onclick="toggle(this)">Cleanser</div>
-    <div class="item" onclick="toggle(this)">Moisturizer - Neutrogena Hydro Boost</div>
-    <div class="item" onclick="toggle(this)">Retinol (2-3x per week)</div>
+    <div class="item" onclick="toggle(this)">Moisturizer - Hydro Boost</div>
+    <div class="item" onclick="toggle(this)">Retinol (2–3x/week)</div>
   </div>
 
 </div>
 
 <!-- PRODUCTS -->
 <div id="products" class="screen">
+  <div class="card"><h2>🧴 Products</h2></div>
 
   <div class="card">
-    <h2>🧴 Products</h2>
-    <p>Stable product library (safe images + descriptions)</p>
-  </div>
-
-  <div class="card">
-    <h3>The Ordinary Glucoside Foaming Cleanser</h3>
+    <h3>Cleanser</h3>
     <img src="https://via.placeholder.com/400x200?text=Cleanser">
-    <p>Gently removes dirt and oil while protecting your skin barrier.</p>
   </div>
 
   <div class="card">
-    <h3>Beauty of Joseon Glow Serum</h3>
+    <h3>Glow Serum</h3>
     <img src="https://via.placeholder.com/400x200?text=Glow+Serum">
-    <p>Helps brighten skin, reduce redness, and improve texture.</p>
   </div>
 
   <div class="card">
-    <h3>Black Girl Sunscreen SPF 30</h3>
+    <h3>Sunscreen</h3>
     <img src="https://via.placeholder.com/400x200?text=Sunscreen">
-    <p>Protects against UV damage and prevents dark spots.</p>
   </div>
-
-  <div class="card">
-    <h3>Neutrogena Hydro Boost Water Gel</h3>
-    <img src="https://via.placeholder.com/400x200?text=Moisturizer">
-    <p>Hydrates skin without clogging pores.</p>
-  </div>
-
-  <div class="card">
-    <h3>The Ordinary Salicylic Acid 2%</h3>
-    <img src="https://via.placeholder.com/400x200?text=Salicylic+Acid">
-    <p>Clears pores and prevents acne formation.</p>
-  </div>
-
-  <div class="card">
-    <h3>Pair Acne Cream</h3>
-    <img src="https://via.placeholder.com/400x200?text=Acne+Cream">
-    <p>Spot treatment for active pimples.</p>
-  </div>
-
-  <div class="card">
-    <h3>Retinol Treatment</h3>
-    <img src="https://via.placeholder.com/400x200?text=Retinol">
-    <p>Improves skin texture and reduces acne marks over time.</p>
-  </div>
-
-  <div class="card">
-    <h3>Mugwort Green Mask</h3>
-    <img src="https://via.placeholder.com/400x200?text=Mask">
-    <p>Soothes irritation and calms inflamed skin.</p>
-  </div>
-
 </div>
 
 <!-- STATS -->
 <div id="stats" class="screen">
   <div class="card">
     <h2>📊 Stats</h2>
-    <p>Coming next: streak tracking + consistency score</p>
+
+    <div class="stat">Morning Done: <span id="mDone">0</span></div>
+    <div class="stat">Night Done: <span id="nDone">0</span></div>
+    <div class="stat">Streak: <span id="streak">0</span></div>
+
+    <button onclick="completeDay()">Mark Day Complete</button>
   </div>
 </div>
 
 <!-- AI -->
 <div id="ai" class="screen">
   <div class="card">
-    <h2>🧠 AI Assistant</h2>
-    <p>Coming next: “edit my routine” commands</p>
+    <h2>🧠 AI</h2>
+    <p>Coming next: smart routine editor</p>
   </div>
 </div>
 
 <!-- NAV -->
 <div class="nav">
-  <button onclick="showTab('home')">Home</button>
-  <button onclick="showTab('products')">Products</button>
-  <button onclick="showTab('stats')">Stats</button>
-  <button onclick="showTab('ai')">AI</button>
+  <button id="tab-home" onclick="showTab('home', this)">
+    <span class="tabIcon">🏠</span>Home
+  </button>
+
+  <button id="tab-products" onclick="showTab('products', this)">
+    <span class="tabIcon">🧴</span>Products
+  </button>
+
+  <button id="tab-stats" onclick="showTab('stats', this)">
+    <span class="tabIcon">📊</span>Stats
+  </button>
+
+  <button id="tab-ai" onclick="showTab('ai', this)">
+    <span class="tabIcon">🧠</span>AI
+  </button>
 </div>
 
 <script>
-function showTab(id){
+let morningDone = 0;
+let nightDone = 0;
+let streak = 0;
+
+function showTab(id, btn){
+
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  const el = document.getElementById(id);
-  if (el) el.classList.add("active");
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".nav button").forEach(b => b.classList.remove("activeTab"));
+  btn.classList.add("activeTab");
 }
 
 function toggle(el){
   el.classList.toggle("done");
+
+  if(el.innerText.toLowerCase().includes("morning")){
+    morningDone++;
+    document.getElementById("mDone").innerText = morningDone;
+  } else {
+    nightDone++;
+    document.getElementById("nDone").innerText = nightDone;
+  }
+}
+
+function completeDay(){
+  if(morningDone > 0 && nightDone > 0){
+    streak++;
+    document.getElementById("streak").innerText = streak;
+    morningDone = 0;
+    nightDone = 0;
+    document.getElementById("mDone").innerText = 0;
+    document.getElementById("nDone").innerText = 0;
+  } else {
+    alert("Complete both morning + night first");
+  }
 }
 </script>
 
