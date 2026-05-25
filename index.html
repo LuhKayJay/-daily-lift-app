@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V3.3</title>
+<title>Daily Lift V3.4</title>
 
 <style>
 body {
@@ -19,7 +19,6 @@ header {
   font-weight: bold;
 }
 
-/* Screens */
 .screen {
   display: none;
   padding: 15px;
@@ -30,7 +29,6 @@ header {
   display: block;
 }
 
-/* Cards */
 .card {
   background: #1a1a24;
   padding: 12px;
@@ -38,7 +36,6 @@ header {
   margin-bottom: 12px;
 }
 
-/* Items */
 .item {
   background: #222;
   padding: 10px;
@@ -52,22 +49,23 @@ header {
   text-decoration: line-through;
 }
 
-/* PRODUCTS */
-img {
+/* PROGRESS BARS */
+.bar {
   width: 100%;
-  height: 160px;
-  object-fit: cover;
+  height: 10px;
+  background: #333;
   border-radius: 10px;
-  margin-top: 8px;
+  overflow: hidden;
+  margin-top: 5px;
 }
 
-/* STATS */
-.stat {
-  font-size: 18px;
-  margin-top: 10px;
+.fill {
+  height: 100%;
+  width: 0%;
+  background: #6c5ce7;
 }
 
-/* NAV BAR */
+/* NAV */
 .nav {
   position: fixed;
   bottom: 0;
@@ -79,48 +77,59 @@ img {
 
 .nav button {
   flex: 1;
-  padding: 10px 0;
+  padding: 10px;
   border: none;
   background: none;
-  color: #aaa;
+  color: white;
   font-size: 12px;
 }
 
-/* ACTIVE TAB */
-.nav button.activeTab {
-  color: white;
-  border-top: 3px solid #6c5ce7;
-  background: rgba(108,92,231,0.1);
-}
-
-/* TAB ICON */
 .tabIcon {
   display: block;
   font-size: 18px;
-  margin-bottom: 2px;
 }
 </style>
 </head>
 
 <body>
 
-<header>🔥 Daily Lift V3.3</header>
+<header>🔥 Daily Lift V3.4</header>
 
 <!-- HOME -->
 <div id="home" class="screen active">
 
   <div class="card">
-    <h2>🌅 Morning Lift</h2>
-    <div class="item" onclick="toggle(this)">Cleanser - The Ordinary</div>
-    <div class="item" onclick="toggle(this)">Glow Serum - Beauty of Joseon</div>
-    <div class="item" onclick="toggle(this)">Sunscreen - Black Girl SPF</div>
+    <h3 id="date"></h3>
+    <p id="todayLabel"></p>
   </div>
 
   <div class="card">
-    <h2>🌙 Night Lift</h2>
-    <div class="item" onclick="toggle(this)">Cleanser</div>
-    <div class="item" onclick="toggle(this)">Moisturizer - Hydro Boost</div>
-    <div class="item" onclick="toggle(this)">Retinol (2–3x/week)</div>
+    <h3>🌅 Morning Progress</h3>
+    <div class="bar"><div id="morningBar" class="fill"></div></div>
+  </div>
+
+  <div class="card">
+    <h3>🌙 Night Progress</h3>
+    <div class="bar"><div id="nightBar" class="fill"></div></div>
+  </div>
+
+  <div class="card">
+    <h3>📊 Weekly Progress</h3>
+    <div class="bar"><div id="weekBar" class="fill"></div></div>
+  </div>
+
+  <div class="card">
+    <h3>🌅 Morning Lift</h3>
+    <div class="item" onclick="toggle(this,'m')">Cleanser</div>
+    <div class="item" onclick="toggle(this,'m')">Glow Serum</div>
+    <div class="item" onclick="toggle(this,'m')">Sunscreen</div>
+  </div>
+
+  <div class="card">
+    <h3>🌙 Night Lift</h3>
+    <div class="item" onclick="toggle(this,'n')">Cleanser</div>
+    <div class="item" onclick="toggle(this,'n')">Moisturizer</div>
+    <div class="item" onclick="toggle(this,'n')">Retinol</div>
   </div>
 
 </div>
@@ -128,101 +137,112 @@ img {
 <!-- PRODUCTS -->
 <div id="products" class="screen">
   <div class="card"><h2>🧴 Products</h2></div>
-
-  <div class="card">
-    <h3>Cleanser</h3>
-    <img src="https://via.placeholder.com/400x200?text=Cleanser">
-  </div>
-
-  <div class="card">
-    <h3>Glow Serum</h3>
-    <img src="https://via.placeholder.com/400x200?text=Glow+Serum">
-  </div>
-
-  <div class="card">
-    <h3>Sunscreen</h3>
-    <img src="https://via.placeholder.com/400x200?text=Sunscreen">
-  </div>
+  <div class="card"><p>Stable product system (next upgrade: editable images)</p></div>
 </div>
 
 <!-- STATS -->
 <div id="stats" class="screen">
+
   <div class="card">
-    <h2>📊 Stats</h2>
+    <h2>📊 Stats Control</h2>
 
-    <div class="stat">Morning Done: <span id="mDone">0</span></div>
-    <div class="stat">Night Done: <span id="nDone">0</span></div>
-    <div class="stat">Streak: <span id="streak">0</span></div>
+    <p>Morning Done: <span id="mCount">0</span></p>
+    <p>Night Done: <span id="nCount">0</span></p>
+    <p>Streak: <span id="streak">0</span></p>
 
-    <button onclick="completeDay()">Mark Day Complete</button>
+    <button onclick="resetMorning()">Reset Morning</button>
+    <button onclick="resetNight()">Reset Night</button>
   </div>
+
 </div>
 
 <!-- AI -->
 <div id="ai" class="screen">
   <div class="card">
     <h2>🧠 AI</h2>
-    <p>Coming next: smart routine editor</p>
+    <p>Coming next: smart routine editing</p>
   </div>
 </div>
 
 <!-- NAV -->
 <div class="nav">
-  <button id="tab-home" onclick="showTab('home', this)">
-    <span class="tabIcon">🏠</span>Home
-  </button>
-
-  <button id="tab-products" onclick="showTab('products', this)">
-    <span class="tabIcon">🧴</span>Products
-  </button>
-
-  <button id="tab-stats" onclick="showTab('stats', this)">
-    <span class="tabIcon">📊</span>Stats
-  </button>
-
-  <button id="tab-ai" onclick="showTab('ai', this)">
-    <span class="tabIcon">🧠</span>AI
-  </button>
+  <button onclick="showTab('home',this)">🏠<br>Home</button>
+  <button onclick="showTab('products',this)">🧴<br>Products</button>
+  <button onclick="showTab('stats',this)">📊<br>Stats</button>
+  <button onclick="showTab('ai',this)">🧠<br>AI</button>
 </div>
 
 <script>
-let morningDone = 0;
-let nightDone = 0;
+
+let mDone = 0;
+let nDone = 0;
 let streak = 0;
+let weekTotal = 0;
 
-function showTab(id, btn){
+let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+let today = new Date();
 
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+document.getElementById("date").innerText =
+  today.toDateString();
 
-  document.querySelectorAll(".nav button").forEach(b => b.classList.remove("activeTab"));
-  btn.classList.add("activeTab");
-}
+document.getElementById("todayLabel").innerText =
+  "Today is " + days[today.getDay()] + " — follow your routine";
 
-function toggle(el){
+function toggle(el,type){
+
   el.classList.toggle("done");
 
-  if(el.innerText.toLowerCase().includes("morning")){
-    morningDone++;
-    document.getElementById("mDone").innerText = morningDone;
-  } else {
-    nightDone++;
-    document.getElementById("nDone").innerText = nightDone;
-  }
+  if(type === "m") mDone++;
+  if(type === "n") nDone++;
+
+  document.getElementById("mCount").innerText = mDone;
+  document.getElementById("nCount").innerText = nDone;
+
+  updateBars();
 }
 
-function completeDay(){
-  if(morningDone > 0 && nightDone > 0){
-    streak++;
-    document.getElementById("streak").innerText = streak;
-    morningDone = 0;
-    nightDone = 0;
-    document.getElementById("mDone").innerText = 0;
-    document.getElementById("nDone").innerText = 0;
-  } else {
-    alert("Complete both morning + night first");
-  }
+function updateBars(){
+
+  let morningPercent = Math.min((mDone/3)*100,100);
+  let nightPercent = Math.min((nDone/3)*100,100);
+
+  document.getElementById("morningBar").style.width = morningPercent + "%";
+  document.getElementById("nightBar").style.width = nightPercent + "%";
+
+  let dayProgress = (morningPercent + nightPercent)/2;
+  document.getElementById("weekBar").style.width = dayProgress + "%";
 }
+
+function resetMorning(){
+  mDone = 0;
+  document.getElementById("mCount").innerText = 0;
+  document.querySelectorAll(".item").forEach(i=>{
+    if(i.innerText.toLowerCase().includes("cleanser") ||
+       i.innerText.toLowerCase().includes("glow") ||
+       i.innerText.toLowerCase().includes("sunscreen")){
+      i.classList.remove("done");
+    }
+  });
+  updateBars();
+}
+
+function resetNight(){
+  nDone = 0;
+  document.getElementById("nCount").innerText = 0;
+  document.querySelectorAll(".item").forEach(i=>{
+    if(i.innerText.toLowerCase().includes("moisturizer") ||
+       i.innerText.toLowerCase().includes("retinol")){
+      i.classList.remove("done");
+    }
+  });
+  updateBars();
+}
+
+function showTab(id,btn){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
 </script>
 
 </body>
