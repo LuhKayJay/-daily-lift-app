@@ -2,34 +2,108 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skincare Tracker Stable</title>
+<title>Skincare Tracker Stable Fix</title>
 
 <style>
-body{margin:0;font-family:system-ui;background:#0b0b10;color:white;}
-.app{max-width:420px;margin:auto;padding:12px;padding-bottom:80px;}
+body{
+  margin:0;
+  font-family:system-ui;
+  background:#0b0b10;
+  color:white;
+}
 
-.date{text-align:center;font-size:14px;opacity:0.7;margin:10px 0;}
+/* FIX LAYOUT STACKING */
+.app{
+  max-width:420px;
+  margin:auto;
+  padding:12px;
+  padding-bottom:90px;
+  position:relative;
+  z-index:1;
+}
 
-.tabs{display:flex;}
-.tab{flex:1;text-align:center;padding:6px;font-size:12px;opacity:0.6;cursor:pointer;}
-.tab.active{opacity:1;border-bottom:2px solid #6c5ce7;}
+.date{
+  text-align:center;
+  opacity:0.7;
+  margin:10px 0;
+}
 
+/* TABS ALWAYS ON TOP OF CONTENT */
+.tabs{
+  display:flex;
+  position:sticky;
+  top:0;
+  background:#0b0b10;
+  z-index:10;
+  padding-bottom:6px;
+}
+
+.tab{
+  flex:1;
+  text-align:center;
+  padding:6px;
+  font-size:12px;
+  opacity:0.6;
+  cursor:pointer;
+}
+
+.tab.active{
+  opacity:1;
+  border-bottom:2px solid #6c5ce7;
+}
+
+/* CALENDAR FIXED (NO OVERLAP EVER) */
+.calendar{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  margin:12px 0;
+  position:relative;
+  z-index:1;
+}
+
+.day{
+  flex:1;
+  text-align:center;
+  padding:6px;
+  opacity:0.6;
+  cursor:pointer;
+}
+
+.day.active{
+  background:#222;
+  border-radius:8px;
+  opacity:1;
+}
+
+/* CONTENT */
 .page{display:none;}
 .page.active{display:block;}
-
-.calendar{display:flex;justify-content:space-between;font-size:11px;margin:10px 0;}
-.day{flex:1;text-align:center;padding:6px;opacity:0.6;cursor:pointer;}
-.day.active{background:#222;border-radius:8px;opacity:1;}
 
 .item{padding:6px 0;cursor:pointer;}
 .done{text-decoration:line-through;opacity:0.3;}
 
-.bar{height:6px;background:#222;border-radius:20px;overflow:hidden;}
-.fill{height:100%;width:0%;background:#6c5ce7;}
+/* BARS */
+.bar{
+  height:6px;
+  background:#222;
+  border-radius:20px;
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  width:0%;
+  background:#6c5ce7;
+}
 
+/* STATS */
 .stats{font-size:13px;opacity:0.85;}
 
-button{margin:4px;padding:6px;font-size:11px;}
+button{
+  margin:4px;
+  padding:6px;
+  font-size:11px;
+}
 </style>
 </head>
 
@@ -50,44 +124,45 @@ button{margin:4px;padding:6px;font-size:11px;}
 <!-- HOME -->
 <div id="home" class="page active">
 
-  🌅 Morning <span id="mPct">0%</span>
-  <div class="bar"><div id="mBar" class="fill"></div></div>
-  <div id="morning"></div>
+🌅 Morning <span id="mPct">0%</span>
+<div class="bar"><div id="mBar" class="fill"></div></div>
+<div id="morning"></div>
 
-  <br>
+<br>
 
-  🌙 Night <span id="nPct">0%</span>
-  <div class="bar"><div id="nBar" class="fill"></div></div>
-  <div id="night"></div>
+🌙 Night <span id="nPct">0%</span>
+<div class="bar"><div id="nBar" class="fill"></div></div>
+<div id="night"></div>
 
 </div>
 
 <!-- PRODUCTS -->
 <div id="products" class="page">
-  <h3>Products</h3>
-  <div>The Ordinary Cleanser</div>
-  <div>Beauty of Joseon Glow Serum</div>
-  <div>Neutrogena Hydro Boost</div>
-  <div>Black Girl Sunscreen</div>
-  <div>Salicylic Acid</div>
-  <div>Retinol</div>
-  <div>Mugwort Clay Stick</div>
+<h3>Products</h3>
+<div>The Ordinary Cleanser</div>
+<div>Beauty of Joseon Glow Serum</div>
+<div>Neutrogena Hydro Boost</div>
+<div>Black Girl Sunscreen</div>
+<div>Salicylic Acid</div>
+<div>Retinol</div>
+<div>Mugwort Clay Stick</div>
 </div>
 
 <!-- STATS -->
 <div id="stats" class="page">
-  <h3>Stats</h3>
+<h3>Stats</h3>
 
-  🌅 Morning Days: <span id="mCount">0</span><br>
-  🌙 Night Days: <span id="nCount">0</span><br>
-  📅 Full Days: <span id="fCount">0</span><br>
-  🔥 Streak: <span id="streak">0</span><br>
+🌅 Morning Days: <span id="mCount">0</span><br>
+🌙 Night Days: <span id="nCount">0</span><br>
+📅 Full Days: <span id="fCount">0</span><br>
+🔥 Streak: <span id="streak">0</span><br>
 
-  <hr>
+<hr>
 
-  <button onclick="reset('m')">Reset Morning</button>
-  <button onclick="reset('n')">Reset Night</button>
-  <button onclick="reset('all')">Reset All</button>
+<button onclick="reset('m')">Reset Morning</button>
+<button onclick="reset('n')">Reset Night</button>
+<button onclick="reset('all')">Reset All</button>
+
 </div>
 
 </div>
@@ -116,14 +191,10 @@ const morning=["Cleanser","Glow Serum","Moisturizer","Sunscreen"];
 
 /* STATE */
 let state={};
-for(let i=0;i<7;i++) state[i]={m:[],n:[]};
+for(let i=0;i<7;i++) state[i]={m:[],n:[],done:false};
 
-/* STREAK SAFE STORAGE */
-let streakData={
-lastCompletedDay:-1,
-current:0,
-best:0
-};
+/* STREAK (ONLY CHANGES ON COMPLETION) */
+let streakData={current:0,best:0};
 
 /* TAB */
 function openTab(id,el){
@@ -134,7 +205,7 @@ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
 el.classList.add("active");
 }
 
-/* CALENDAR (NO LOGIC SIDE EFFECTS) */
+/* CALENDAR (NO LOGIC) */
 function buildCalendar(){
 let c=document.getElementById("calendar");
 c.innerHTML="";
@@ -148,9 +219,28 @@ c.appendChild(div);
 });
 }
 
-/* TOGGLE ONLY STATE */
+/* TOGGLE = ONLY PLACE WHERE STREAK CAN CHANGE */
 function toggle(type,i){
+
 state[selected][type][i]=!state[selected][type][i];
+
+/* CHECK IF FULL DAY COMPLETE */
+let fullDone =
+state[selected].m.every(v=>v) &&
+state[selected].n.every(v=>v);
+
+/* ONLY UPDATE STREAK HERE (NOT ANYWHERE ELSE) */
+if(fullDone && !state[selected].done){
+state[selected].done=true;
+streakData.current++;
+streakData.best=Math.max(streakData.best,streakData.current);
+}
+
+if(!fullDone && state[selected].done){
+state[selected].done=false;
+streakData.current=Math.max(0,streakData.current-1);
+}
+
 render();
 }
 
@@ -172,7 +262,7 @@ night.map((x,i)=>
 ).join("");
 }
 
-/* UPDATE STATS (DERIVED ONLY) */
+/* UPDATE STATS */
 function update(){
 
 let stats={m:0,n:0,f:0};
@@ -183,34 +273,14 @@ let nDone=state[i].n.every(v=>v);
 
 if(mDone) stats.m++;
 if(nDone) stats.n++;
-if(mDone && nDone) stats.f++;
+if(mDone&&nDone) stats.f++;
 }
 
-/* SAFE STREAK LOGIC (NO SPAM EVER) */
-let todayDone =
-state[selected].m.every(v=>v) &&
-state[selected].n.every(v=>v);
-
-if(todayDone && streakData.lastCompletedDay !== selected){
-streakData.current++;
-streakData.lastCompletedDay = selected;
-
-streakData.best=Math.max(streakData.best,streakData.current);
-}
-
-if(!todayDone && streakData.lastCompletedDay === selected){
-streakData.current=Math.max(0,streakData.current-1);
-streakData.lastCompletedDay=-1;
-}
-
-/* PERCENTAGES */
 let s=state[selected];
 
 let mPct=(s.m.filter(Boolean).length/morning.length)*100;
 let nPct=(s.n.filter(Boolean).length/schedule[selected].length)*100;
-let dPct=(mPct+nPct)/2;
 
-/* UI */
 document.getElementById("mBar").style.width=mPct+"%";
 document.getElementById("nBar").style.width=nPct+"%";
 
@@ -236,8 +306,8 @@ for(let i=0;i<7;i++) state[i].n=[];
 }
 
 if(type==="all"){
-for(let i=0;i<7;i++) state[i]={m:[],n:[]};
-streakData={lastCompletedDay:-1,current:0,best:0};
+for(let i=0;i<7;i++) state[i]={m:[],n:[],done:false};
+streakData={current:0,best:0};
 }
 
 render();
