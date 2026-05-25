@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V5.2</title>
+<title>Daily Lift V6</title>
 
 <style>
 body{
@@ -19,7 +19,10 @@ body{
   padding-bottom:80px;
 }
 
-header{text-align:center;font-weight:600;}
+header{
+  text-align:center;
+  font-weight:600;
+}
 
 .date{
   text-align:center;
@@ -29,13 +32,24 @@ header{text-align:center;font-weight:600;}
 }
 
 /* TABS */
-.tabs{display:flex;margin-bottom:10px;}
-.tab{flex:1;text-align:center;font-size:12px;padding:6px;opacity:0.6;cursor:pointer;}
-.tab.active{opacity:1;border-bottom:2px solid #6c5ce7;}
+.tabs{
+  display:flex;
+  margin-bottom:10px;
+}
 
-/* PAGES */
-.page{display:none;}
-.page.active{display:block;}
+.tab{
+  flex:1;
+  text-align:center;
+  font-size:12px;
+  padding:6px;
+  opacity:0.6;
+  cursor:pointer;
+}
+
+.tab.active{
+  opacity:1;
+  border-bottom:2px solid #6c5ce7;
+}
 
 /* CALENDAR */
 .calendar{
@@ -86,11 +100,15 @@ header{text-align:center;font-weight:600;}
   background:linear-gradient(90deg,#6c5ce7,#00d2ff);
 }
 
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
 /* STATS */
 .stats{
-  margin-top:10px;
   font-size:13px;
   opacity:0.85;
+  margin-top:10px;
 }
 </style>
 </head>
@@ -99,7 +117,7 @@ header{text-align:center;font-weight:600;}
 
 <div class="app">
 
-<header>🔥 Daily Lift V5.2</header>
+<header>🔥 Daily Lift V6</header>
 <div class="date" id="date"></div>
 
 <!-- TABS -->
@@ -138,13 +156,13 @@ header{text-align:center;font-weight:600;}
 <!-- PRODUCTS -->
 <div id="products" class="page">
   <h3>🧴 Products</h3>
-  <div class="item">Cleanser — The Ordinary</div>
-  <div class="item">Glow Serum — Beauty of Joseon</div>
-  <div class="item">Moisturizer — Neutrogena Hydro Boost</div>
-  <div class="item">Sunscreen — Black Girl SPF</div>
-  <div class="item">Salicylic Acid</div>
-  <div class="item">Retinol</div>
-  <div class="item">Mugwort Clay Stick</div>
+  <div class="item">The Ordinary Glucoside Cleanser</div>
+  <div class="item">Beauty of Joseon Glow Serum</div>
+  <div class="item">Neutrogena Hydro Boost Moisturizer</div>
+  <div class="item">Black Girl Sunscreen SPF 30</div>
+  <div class="item">The Ordinary Salicylic Acid</div>
+  <div class="item">The Ordinary Retinol</div>
+  <div class="item">Mugwort Acne Clay Stick</div>
 </div>
 
 <!-- STATS -->
@@ -152,9 +170,9 @@ header{text-align:center;font-weight:600;}
   <h3>📊 Stats</h3>
 
   <div class="stats">
-    🌅 Morning Completed Days: <span id="mCount">0</span><br>
-    🌙 Night Completed Days: <span id="nCount">0</span><br>
-    📅 Full Completed Days: <span id="fCount">0</span><br>
+    🌅 Morning Days Completed: <span id="mCount">0</span><br>
+    🌙 Night Days Completed: <span id="nCount">0</span><br>
+    📅 Full Days Completed: <span id="fCount">0</span><br>
     🔥 Current Streak: <span id="streak">0</span><br>
     🏆 Best Streak: <span id="best">0</span>
   </div>
@@ -190,10 +208,10 @@ const schedule={
 };
 
 const morning=[
-  "Cleanser",
-  "Glow Serum",
-  "Moisturizer",
-  "Sunscreen"
+  "Cleanser - The Ordinary",
+  "Glow Serum - Beauty of Joseon",
+  "Moisturizer - Neutrogena Hydro Boost",
+  "Sunscreen - Black Girl SPF"
 ];
 
 /* STATE */
@@ -202,18 +220,26 @@ for(let i=0;i<7;i++){
   state[i]={m:[],n:[]};
 }
 
-/* STATS ENGINE (FIXED REAL-TIME) */
+/* STATS */
 let stats={
-  morningDays:0,
-  nightDays:0,
-  fullDays:0
+  m:0,n:0,f:0
 };
 
+/* STREAK */
 let streak={
   current:0,
   best:0,
   last:-1
 };
+
+/* TABS */
+function openTab(id,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
+}
 
 /* CALENDAR */
 function buildCalendar(){
@@ -256,57 +282,19 @@ function build(){
   ).join("");
 }
 
-/* REAL-TIME STATS (FIXED LOGIC) */
-function updateStats(){
+/* STATS + STREAK */
+function update(){
 
-  let s=state[selected];
-
-  let mDone = s.m.every(v=>v===true);
-  let nDone = s.n.every(v=>v===true);
-
-  let full = mDone && nDone;
-
-  // COUNT DAILY COMPLETIONS (REAL TIME FIX)
-  stats.morningDays = 0;
-  stats.nightDays = 0;
-  stats.fullDays = 0;
+  stats.m=0; stats.n=0; stats.f=0;
 
   for(let i=0;i<7;i++){
-    let ms = state[i].m.every(v=>v===true);
-    let ns = state[i].n.every(v=>v===true);
+    let mDone=state[i].m.every(v=>v===true);
+    let nDone=state[i].n.every(v=>v===true);
 
-    if(ms) stats.morningDays++;
-    if(ns) stats.nightDays++;
-    if(ms && ns) stats.fullDays++;
+    if(mDone) stats.m++;
+    if(nDone) stats.n++;
+    if(mDone && nDone) stats.f++;
   }
-
-  // STREAK FIX (NO FLIP BUG)
-  if(full){
-    if(streak.last !== selected){
-      streak.current++;
-      streak.last = selected;
-
-      if(streak.current > streak.best){
-        streak.best = streak.current;
-      }
-    }
-  } else {
-    if(streak.last !== selected){
-      streak.current = 0;
-    }
-  }
-
-  /* UPDATE UI */
-  document.getElementById("mCount").innerText=stats.morningDays;
-  document.getElementById("nCount").innerText=stats.nightDays;
-  document.getElementById("fCount").innerText=stats.fullDays;
-
-  document.getElementById("streak").innerText=streak.current;
-  document.getElementById("best").innerText=streak.best;
-}
-
-/* PROGRESS */
-function updateBars(){
 
   let s=state[selected];
 
@@ -321,14 +309,36 @@ function updateBars(){
   document.getElementById("mPct").innerText=Math.round(mPct)+"%";
   document.getElementById("nPct").innerText=Math.round(nPct)+"%";
   document.getElementById("dPct").innerText=Math.round(dPct)+"%";
+
+  document.getElementById("mCount").innerText=stats.m;
+  document.getElementById("nCount").innerText=stats.n;
+  document.getElementById("fCount").innerText=stats.f;
+
+  /* STREAK */
+  let full = s.m.every(v=>v) && s.n.every(v=>v);
+
+  if(full && streak.last!==selected){
+    streak.current++;
+    streak.last=selected;
+
+    if(streak.current>streak.best){
+      streak.best=streak.current;
+    }
+  }
+
+  if(!full && streak.last!==selected){
+    streak.current=0;
+  }
+
+  document.getElementById("streak").innerText=streak.current;
+  document.getElementById("best").innerText=streak.best;
 }
 
 /* MAIN */
 function render(){
   buildCalendar();
   build();
-  updateBars();
-  updateStats();
+  update();
 }
 
 render();
