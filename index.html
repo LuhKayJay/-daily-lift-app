@@ -2,104 +2,153 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Lift V3.4</title>
+<title>Daily Lift V3.5</title>
 
 <style>
+
 body {
   margin: 0;
-  font-family: Arial;
-  background: #0b0b10;
+  font-family: system-ui, Arial;
+  background: radial-gradient(circle at top, #1a1a2e, #0b0b10);
   color: white;
 }
 
-header {
-  text-align: center;
-  padding: 15px;
-  background: #141420;
-  font-weight: bold;
+/* APP WRAPPER */
+.app {
+  max-width: 420px;
+  margin: auto;
 }
 
+/* HEADER */
+header {
+  text-align: center;
+  padding: 18px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* SCREENS */
 .screen {
   display: none;
   padding: 15px;
-  padding-bottom: 90px;
+  padding-bottom: 110px;
 }
 
 .active {
   display: block;
 }
 
+/* GLASS CARD */
 .card {
-  background: #1a1a24;
-  padding: 12px;
-  border-radius: 12px;
-  margin-bottom: 12px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 14px;
+  border-radius: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
+/* ITEM */
 .item {
-  background: #222;
-  padding: 10px;
+  background: rgba(255,255,255,0.08);
+  padding: 12px;
   margin-top: 8px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.item:active {
+  transform: scale(0.98);
 }
 
 .done {
-  opacity: 0.5;
+  opacity: 0.4;
   text-decoration: line-through;
 }
 
-/* PROGRESS BARS */
+/* PROGRESS */
 .bar {
   width: 100%;
   height: 10px;
-  background: #333;
-  border-radius: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
   overflow: hidden;
-  margin-top: 5px;
 }
 
 .fill {
   height: 100%;
   width: 0%;
-  background: #6c5ce7;
+  background: linear-gradient(90deg, #6c5ce7, #00d2ff);
+  transition: 0.4s ease;
 }
 
-/* NAV */
+/* PRODUCT IMAGE */
+img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+/* BOTTOM NAV */
 .nav {
   position: fixed;
-  bottom: 0;
-  width: 100%;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  max-width: 420px;
   display: flex;
-  background: #141420;
-  border-top: 1px solid #2a2a3a;
+  background: rgba(20,20,30,0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 6px;
 }
 
+/* NAV BUTTON */
 .nav button {
   flex: 1;
-  padding: 10px;
   border: none;
   background: none;
-  color: white;
-  font-size: 12px;
+  color: #aaa;
+  font-size: 11px;
+  padding: 10px 0;
+  border-radius: 14px;
+  transition: 0.2s;
 }
 
+/* ACTIVE TAB */
+.nav button.activeTab {
+  background: rgba(108,92,231,0.25);
+  color: white;
+}
+
+/* TAB ICON */
 .tabIcon {
   display: block;
   font-size: 18px;
+  margin-bottom: 2px;
 }
+
 </style>
 </head>
 
 <body>
 
-<header>🔥 Daily Lift V3.4</header>
+<div class="app">
+
+<header>🔥 Daily Lift V3.5</header>
 
 <!-- HOME -->
 <div id="home" class="screen active">
 
   <div class="card">
-    <h3 id="date"></h3>
+    <h3>📅 Today</h3>
+    <p id="date"></p>
     <p id="todayLabel"></p>
   </div>
 
@@ -114,7 +163,7 @@ header {
   </div>
 
   <div class="card">
-    <h3>📊 Weekly Progress</h3>
+    <h3>📊 Daily Progress</h3>
     <div class="bar"><div id="weekBar" class="fill"></div></div>
   </div>
 
@@ -136,22 +185,38 @@ header {
 
 <!-- PRODUCTS -->
 <div id="products" class="screen">
-  <div class="card"><h2>🧴 Products</h2></div>
-  <div class="card"><p>Stable product system (next upgrade: editable images)</p></div>
+
+  <div class="card">
+    <h2>🧴 Products</h2>
+  </div>
+
+  <div class="card">
+    <h3>Cleanser</h3>
+    <img src="https://via.placeholder.com/600x300?text=Cleanser">
+  </div>
+
+  <div class="card">
+    <h3>Glow Serum</h3>
+    <img src="https://via.placeholder.com/600x300?text=Glow+Serum">
+  </div>
+
+  <div class="card">
+    <h3>Sunscreen</h3>
+    <img src="https://via.placeholder.com/600x300?text=Sunscreen">
+  </div>
+
 </div>
 
 <!-- STATS -->
 <div id="stats" class="screen">
 
   <div class="card">
-    <h2>📊 Stats Control</h2>
-
+    <h2>📊 Stats</h2>
     <p>Morning Done: <span id="mCount">0</span></p>
     <p>Night Done: <span id="nCount">0</span></p>
     <p>Streak: <span id="streak">0</span></p>
 
-    <button onclick="resetMorning()">Reset Morning</button>
-    <button onclick="resetNight()">Reset Night</button>
+    <button onclick="resetAll()">Reset Progress</button>
   </div>
 
 </div>
@@ -160,16 +225,26 @@ header {
 <div id="ai" class="screen">
   <div class="card">
     <h2>🧠 AI</h2>
-    <p>Coming next: smart routine editing</p>
+    <p>Coming next: smart routine engine</p>
   </div>
+</div>
+
 </div>
 
 <!-- NAV -->
 <div class="nav">
-  <button onclick="showTab('home',this)">🏠<br>Home</button>
-  <button onclick="showTab('products',this)">🧴<br>Products</button>
-  <button onclick="showTab('stats',this)">📊<br>Stats</button>
-  <button onclick="showTab('ai',this)">🧠<br>AI</button>
+  <button onclick="showTab('home',this)">
+    <span class="tabIcon">🏠</span>Home
+  </button>
+  <button onclick="showTab('products',this)">
+    <span class="tabIcon">🧴</span>Products
+  </button>
+  <button onclick="showTab('stats',this)">
+    <span class="tabIcon">📊</span>Stats
+  </button>
+  <button onclick="showTab('ai',this)">
+    <span class="tabIcon">🧠</span>AI
+  </button>
 </div>
 
 <script>
@@ -177,19 +252,15 @@ header {
 let mDone = 0;
 let nDone = 0;
 let streak = 0;
-let weekTotal = 0;
 
-let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 let today = new Date();
+let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
-document.getElementById("date").innerText =
-  today.toDateString();
-
+document.getElementById("date").innerText = today.toDateString();
 document.getElementById("todayLabel").innerText =
-  "Today is " + days[today.getDay()] + " — follow your routine";
+  "Today is " + days[today.getDay()] + " — stay consistent";
 
 function toggle(el,type){
-
   el.classList.toggle("done");
 
   if(type === "m") mDone++;
@@ -203,44 +274,29 @@ function toggle(el,type){
 
 function updateBars(){
 
-  let morningPercent = Math.min((mDone/3)*100,100);
-  let nightPercent = Math.min((nDone/3)*100,100);
+  let morning = Math.min((mDone/3)*100,100);
+  let night = Math.min((nDone/3)*100,100);
 
-  document.getElementById("morningBar").style.width = morningPercent + "%";
-  document.getElementById("nightBar").style.width = nightPercent + "%";
+  document.getElementById("morningBar").style.width = morning + "%";
+  document.getElementById("nightBar").style.width = night + "%";
 
-  let dayProgress = (morningPercent + nightPercent)/2;
-  document.getElementById("weekBar").style.width = dayProgress + "%";
+  document.getElementById("weekBar").style.width = ((morning + night)/2) + "%";
 }
 
-function resetMorning(){
+function resetAll(){
   mDone = 0;
-  document.getElementById("mCount").innerText = 0;
-  document.querySelectorAll(".item").forEach(i=>{
-    if(i.innerText.toLowerCase().includes("cleanser") ||
-       i.innerText.toLowerCase().includes("glow") ||
-       i.innerText.toLowerCase().includes("sunscreen")){
-      i.classList.remove("done");
-    }
-  });
-  updateBars();
-}
-
-function resetNight(){
   nDone = 0;
+  document.getElementById("mCount").innerText = 0;
   document.getElementById("nCount").innerText = 0;
-  document.querySelectorAll(".item").forEach(i=>{
-    if(i.innerText.toLowerCase().includes("moisturizer") ||
-       i.innerText.toLowerCase().includes("retinol")){
-      i.classList.remove("done");
-    }
-  });
   updateBars();
 }
 
 function showTab(id,btn){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("activeTab"));
+  btn.classList.add("activeTab");
 }
 
 </script>
