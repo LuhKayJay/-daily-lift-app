@@ -12,24 +12,21 @@ body{
   color:white;
 }
 
-/* APP WRAPPER */
 .app{
   max-width:420px;
   margin:auto;
   padding:12px;
 }
 
-/* DATE */
 .date{
   text-align:center;
   opacity:0.7;
   margin:10px 0;
 }
 
-/* TABS */
+/* TABS FIXED */
 .tabs{
   display:flex;
-  background:#0b0b10;
   border-bottom:1px solid #222;
 }
 
@@ -37,8 +34,8 @@ body{
   flex:1;
   text-align:center;
   padding:10px;
-  cursor:pointer;
   opacity:0.5;
+  cursor:pointer;
 }
 
 .tab.active{
@@ -46,17 +43,10 @@ body{
   border-bottom:2px solid #6c5ce7;
 }
 
-/* PAGES — THIS FIXES YOUR MAIN BUG */
-.page{
-  display:none;
-  padding-top:10px;
-}
+/* PAGE SYSTEM FIX (this was your main bug) */
+.page{display:none;}
+.page.active{display:block; padding-top:10px;}
 
-.page.active{
-  display:block;
-}
-
-/* CALENDAR */
 .calendar{
   display:flex;
   justify-content:space-between;
@@ -78,7 +68,6 @@ body{
   opacity:1;
 }
 
-/* ITEMS */
 .item{
   padding:6px 0;
   cursor:pointer;
@@ -89,7 +78,6 @@ body{
   opacity:0.3;
 }
 
-/* BAR */
 .bar{
   height:6px;
   background:#222;
@@ -103,7 +91,6 @@ body{
   background:#6c5ce7;
 }
 
-/* STATS */
 button{
   margin:4px;
   padding:6px;
@@ -182,64 +169,23 @@ document.getElementById("date").innerText=new Date().toDateString();
 let days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 let selected=new Date().getDay();
 
-/* WEEK */
-function getWeekNumber(){
-  let now=new Date();
-  let start=new Date(now.getFullYear(),0,1);
-  return Math.floor((now-start)/(1000*60*60*24*7));
-}
+/* ICE DAYS (3x per week fixed) */
+const iceDays=[0,2,4]; // Sun, Tue, Thu
 
-/* SATURDAY ROTATION */
-function saturdayRoutine(){
-  let week=getWeekNumber();
-  let type=(week%2===0)?"Acne":"Recovery";
-
-  return type==="Acne"
-  ?[
-    "The Ordinary Glucoside Foaming Cleanser",
-    "The Ordinary Salicylic Acid 2%",
-    "The Ordinary Natural Moisturizing Factors + Beta-glucan"
-  ]
-  :[
-    "The Ordinary Glucoside Foaming Cleanser",
-    "The Ordinary Natural Moisturizing Factors + Beta-glucan"
-  ];
-}
-
-/* NIGHT ROUTINE */
+/* WEEKLY NIGHT ROUTINE */
 function getNight(day){
-  const sat=saturdayRoutine();
 
-  return {
-    0:[
-      "The Ordinary Glucoside Foaming Cleanser",
-      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
-    ],
-    1:[
-      "The Ordinary Glucoside Foaming Cleanser",
-      "The Ordinary Salicylic Acid 2%",
-      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
-    ],
-    2:[
-      "The Ordinary Glucoside Foaming Cleanser",
-      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
-    ],
-    3:[
-      "The Ordinary Glucoside Foaming Cleanser",
-      "Retinol (Generic)",
-      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
-    ],
-    4:[
-      "The Ordinary Glucoside Foaming Cleanser",
-      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
-    ],
-    5:[
-      "The Ordinary Glucoside Foaming Cleanser",
-      "Mugwort Acne Clay Stick",
-      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
-    ],
-    6:sat
-  }[day];
+const base={
+0:["The Ordinary Glucoside Foaming Cleanser","The Ordinary Natural Moisturizing Factors + Beta-glucan"],
+1:["The Ordinary Glucoside Foaming Cleanser","The Ordinary Salicylic Acid 2%","The Ordinary Natural Moisturizing Factors + Beta-glucan"],
+2:["The Ordinary Glucoside Foaming Cleanser","The Ordinary Natural Moisturizing Factors + Beta-glucan"],
+3:["The Ordinary Glucoside Foaming Cleanser","Retinol (Generic)","The Ordinary Natural Moisturizing Factors + Beta-glucan"],
+4:["The Ordinary Glucoside Foaming Cleanser","The Ordinary Natural Moisturizing Factors + Beta-glucan"],
+5:["The Ordinary Glucoside Foaming Cleanser","Mugwort Acne Clay Stick","The Ordinary Natural Moisturizing Factors + Beta-glucan"],
+6:["The Ordinary Glucoside Foaming Cleanser","The Ordinary Natural Moisturizing Factors + Beta-glucan"]
+};
+
+return base[day];
 }
 
 /* STATE */
@@ -248,13 +194,13 @@ for(let i=0;i<7;i++) state[i]={m:[],n:[],done:false};
 
 let streak=0;
 
-/* TAB SWITCH (FIXED) */
+/* TAB FIX */
 function openTab(id,el){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
 
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  el.classList.add("active");
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+el.classList.add("active");
 }
 
 /* CALENDAR */
@@ -295,19 +241,24 @@ streak=Math.max(0,streak-1);
 render();
 }
 
-/* BUILD */
+/* BUILD UI */
 function build(){
 
 let s=state[selected];
 let night=getNight(selected);
 
-/* MORNING (FIXED — NO PLACEHOLDERS) */
+/* MORNING */
 let morning=[
 "The Ordinary Glucoside Foaming Cleanser",
 "Beauty of Joseon Glow Serum (Propolis + Niacinamide)",
 "Neutrogena Hydro Boost Water Gel",
 "Black Girl Sunscreen SPF 30"
 ];
+
+/* ADD ICE LABEL */
+if(iceDays.includes(selected)){
+morning.unshift("🧊 ICE (30–60 sec before skincare)");
+}
 
 document.getElementById("morning").innerHTML=
 morning.map((x,i)=>
