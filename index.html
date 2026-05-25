@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skincare Tracker Stable Fix</title>
+<title>Skin Tracker</title>
 
 <style>
 body{
@@ -12,36 +12,33 @@ body{
   color:white;
 }
 
-/* FIX LAYOUT STACKING */
 .app{
   max-width:420px;
   margin:auto;
   padding:12px;
   padding-bottom:90px;
-  position:relative;
-  z-index:1;
 }
 
+/* TOP DATE */
 .date{
   text-align:center;
   opacity:0.7;
   margin:10px 0;
 }
 
-/* TABS ALWAYS ON TOP OF CONTENT */
+/* TABS */
 .tabs{
   display:flex;
   position:sticky;
   top:0;
   background:#0b0b10;
   z-index:10;
-  padding-bottom:6px;
 }
 
 .tab{
   flex:1;
   text-align:center;
-  padding:6px;
+  padding:8px;
   font-size:12px;
   opacity:0.6;
   cursor:pointer;
@@ -52,14 +49,12 @@ body{
   border-bottom:2px solid #6c5ce7;
 }
 
-/* CALENDAR FIXED (NO OVERLAP EVER) */
+/* CALENDAR */
 .calendar{
   display:flex;
   justify-content:space-between;
   font-size:11px;
   margin:12px 0;
-  position:relative;
-  z-index:1;
 }
 
 .day{
@@ -76,12 +71,16 @@ body{
   opacity:1;
 }
 
-/* CONTENT */
-.page{display:none;}
-.page.active{display:block;}
+/* ITEMS */
+.item{
+  padding:6px 0;
+  cursor:pointer;
+}
 
-.item{padding:6px 0;cursor:pointer;}
-.done{text-decoration:line-through;opacity:0.3;}
+.done{
+  text-decoration:line-through;
+  opacity:0.3;
+}
 
 /* BARS */
 .bar{
@@ -90,6 +89,7 @@ body{
   border-radius:20px;
   overflow:hidden;
 }
+
 .fill{
   height:100%;
   width:0%;
@@ -97,8 +97,6 @@ body{
 }
 
 /* STATS */
-.stats{font-size:13px;opacity:0.85;}
-
 button{
   margin:4px;
   padding:6px;
@@ -139,13 +137,14 @@ button{
 <!-- PRODUCTS -->
 <div id="products" class="page">
 <h3>Products</h3>
-<div>The Ordinary Cleanser</div>
-<div>Beauty of Joseon Glow Serum</div>
-<div>Neutrogena Hydro Boost</div>
-<div>Black Girl Sunscreen</div>
-<div>Salicylic Acid</div>
-<div>Retinol</div>
-<div>Mugwort Clay Stick</div>
+<div>The Ordinary Glucoside Foaming Cleanser</div>
+<div>Beauty of Joseon Glow Serum (Propolis + Niacinamide)</div>
+<div>Neutrogena Hydro Boost Water Gel</div>
+<div>Black Girl Sunscreen SPF 30</div>
+<div>The Ordinary Salicylic Acid 2%</div>
+<div>Retinol (Generic)</div>
+<div>Mugwort Acne Clay Stick</div>
+<div>The Ordinary Natural Moisturizing Factors + Beta-glucan</div>
 </div>
 
 <!-- STATS -->
@@ -170,31 +169,62 @@ button{
 <script>
 
 /* DATE */
-document.getElementById("date").innerText=new Date().toDateString();
+document.getElementById("date").innerText = new Date().toDateString();
 
 /* DAYS */
 let days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 let selected=new Date().getDay();
 
-/* ROUTINES */
-const schedule={
-0:["Cleanser","Moisturizer"],
-1:["Cleanser","Salicylic Acid","Moisturizer"],
-2:["Cleanser","Moisturizer"],
-3:["Cleanser","Retinol","Moisturizer"],
-4:["Cleanser","Moisturizer"],
-5:["Cleanser","Mask","Moisturizer"],
-6:["Cleanser","Salicylic Acid","Moisturizer"]
-};
+/* WEEK FUNCTION */
+function getWeekNumber(){
+  let now=new Date();
+  let start=new Date(now.getFullYear(),0,1);
+  return Math.floor((now-start)/(1000*60*60*24*7));
+}
 
-const morning=["Cleanser","Glow Serum","Moisturizer","Sunscreen"];
+/* SATURDAY ROTATION */
+function getSaturdayRoutine(){
+  let week=getWeekNumber();
+  let type=(week%2===0)?"Acne":"Recovery";
+
+  return {
+    type,
+    routine:(type==="Acne")?
+    [
+      "The Ordinary Glucoside Foaming Cleanser",
+      "The Ordinary Salicylic Acid 2%",
+      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
+    ]:
+    [
+      "The Ordinary Glucoside Foaming Cleanser",
+      "The Ordinary Natural Moisturizing Factors + Beta-glucan"
+    ]
+  };
+}
+
+/* WEEKLY NIGHT SCHEDULE */
+function getNightSchedule(day){
+  let sat=getSaturdayRoutine();
+
+  const base={
+    0:["Cleanser","Moisturizer"],
+    1:["Cleanser","Salicylic Acid 2%","Moisturizer"],
+    2:["Cleanser","Moisturizer"],
+    3:["Cleanser","Retinol (Generic)","Moisturizer"],
+    4:["Cleanser","Moisturizer"],
+    5:["Cleanser","Mugwort Clay Stick","Moisturizer"],
+    6:sat.routine
+  };
+
+  return base[day];
+}
 
 /* STATE */
 let state={};
 for(let i=0;i<7;i++) state[i]={m:[],n:[],done:false};
 
-/* STREAK (ONLY CHANGES ON COMPLETION) */
-let streakData={current:0,best:0};
+/* STREAK */
+let streak=0;
 
 /* TAB */
 function openTab(id,el){
@@ -205,7 +235,7 @@ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
 el.classList.add("active");
 }
 
-/* CALENDAR (NO LOGIC) */
+/* CALENDAR */
 function buildCalendar(){
 let c=document.getElementById("calendar");
 c.innerHTML="";
@@ -219,26 +249,26 @@ c.appendChild(div);
 });
 }
 
-/* TOGGLE = ONLY PLACE WHERE STREAK CAN CHANGE */
+/* TOGGLE */
 function toggle(type,i){
 
 state[selected][type][i]=!state[selected][type][i];
 
-/* CHECK IF FULL DAY COMPLETE */
-let fullDone =
+/* CHECK FULL COMPLETION */
+let night=getNightSchedule(selected);
+
+let full =
 state[selected].m.every(v=>v) &&
 state[selected].n.every(v=>v);
 
-/* ONLY UPDATE STREAK HERE (NOT ANYWHERE ELSE) */
-if(fullDone && !state[selected].done){
+if(full && !state[selected].done){
 state[selected].done=true;
-streakData.current++;
-streakData.best=Math.max(streakData.best,streakData.current);
+streak++;
 }
 
-if(!fullDone && state[selected].done){
+if(!full && state[selected].done){
 state[selected].done=false;
-streakData.current=Math.max(0,streakData.current-1);
+streak=Math.max(0,streak-1);
 }
 
 render();
@@ -248,21 +278,27 @@ render();
 function build(){
 
 let s=state[selected];
+let night=getNightSchedule(selected);
 
+/* MORNING */
 document.getElementById("morning").innerHTML=
-morning.map((x,i)=>
+[
+"The Ordinary Glucoside Foaming Cleanser",
+"Beauty of Joseon Glow Serum (Propolis + Niacinamide)",
+"Neutrogena Hydro Boost Water Gel",
+"Black Girl Sunscreen SPF 30"
+].map((x,i)=>
 `<div class="item ${s.m[i]?'done':''}" onclick="toggle('m',${i})">${x}</div>`
 ).join("");
 
-let night=schedule[selected];
-
+/* NIGHT */
 document.getElementById("night").innerHTML=
 night.map((x,i)=>
 `<div class="item ${s.n[i]?'done':''}" onclick="toggle('n',${i})">${x}</div>`
 ).join("");
 }
 
-/* UPDATE STATS */
+/* UPDATE */
 function update(){
 
 let stats={m:0,n:0,f:0};
@@ -276,10 +312,12 @@ if(nDone) stats.n++;
 if(mDone&&nDone) stats.f++;
 }
 
+/* PERCENT */
 let s=state[selected];
+let night=getNightSchedule(selected);
 
-let mPct=(s.m.filter(Boolean).length/morning.length)*100;
-let nPct=(s.n.filter(Boolean).length/schedule[selected].length)*100;
+let mPct=(s.m.filter(Boolean).length/4)*100;
+let nPct=(s.n.filter(Boolean).length/night.length)*100;
 
 document.getElementById("mBar").style.width=mPct+"%";
 document.getElementById("nBar").style.width=nPct+"%";
@@ -291,7 +329,7 @@ document.getElementById("mCount").innerText=stats.m;
 document.getElementById("nCount").innerText=stats.n;
 document.getElementById("fCount").innerText=stats.f;
 
-document.getElementById("streak").innerText=streakData.current;
+document.getElementById("streak").innerText=streak;
 }
 
 /* RESET */
@@ -307,7 +345,7 @@ for(let i=0;i<7;i++) state[i].n=[];
 
 if(type==="all"){
 for(let i=0;i<7;i++) state[i]={m:[],n:[],done:false};
-streakData={current:0,best:0};
+streak=0;
 }
 
 render();
